@@ -5,20 +5,20 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import UserProfile from "./screens/UserProfile"; 
-// import Detail from "./screens/";
+import MyCourses from "./screens/MyCourses";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="UserProfile"
+        initialRouteName="MyCourses"
         screenOptions={{
           headerShown: false,
         }}
       >
         <Stack.Screen name="UserProfile" component={UserProfile} />
-        {/* <Stack.Screen name="" component={} /> */}
+        <Stack.Screen name="MyCourses" component={MyCourses} />
       </Stack.Navigator>
     </NavigationContainer>
   );
