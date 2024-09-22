@@ -7,13 +7,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UserProfile from "./screens/UserProfile"; 
 import MyCourses from "./screens/MyCourses";
 import TeacherProfile from "./screens/teacherProfile";
+import CourseDetails_OverView from "./screens/CourseDetails_OverView";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="TeacherProfile"
+        initialRouteName="CourseDetails_OverView"
         screenOptions={{
           headerShown: false,
         }}
@@ -21,6 +22,7 @@ export default function App() {
         <Stack.Screen name="UserProfile" component={UserProfile} />
         <Stack.Screen name="MyCourses" component={MyCourses} />
         <Stack.Screen name="TeacherProfile" component={TeacherProfile} />
+        <Stack.Screen name="CourseDetails_OverView" component={CourseDetails_OverView} />
       </Stack.Navigator>
     </NavigationContainer>
   );
