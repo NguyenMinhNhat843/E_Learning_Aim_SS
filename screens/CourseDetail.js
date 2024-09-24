@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons'; // For icons like star or play bu
 import CourseDetail_Lesson from './CourseDetail/Lesson';
 import CourseDetail_Overview from './CourseDetail/Overview';
 const UXDesignCourse = () => {
-    const [currentTab, setCurrentTab] = useState('LESSONS');
+    const [currentTab, setCurrentTab] = useState('OVERVIEW');
 
     const handleChangeTab = (tab) => {
         setCurrentTab(tab);
