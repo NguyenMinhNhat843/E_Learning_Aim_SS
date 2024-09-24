@@ -4,8 +4,9 @@ import { Ionicons } from '@expo/vector-icons'; // For icons like star or play bu
 
 import CourseDetail_Lesson from './CourseDetail/Lesson';
 import CourseDetail_Overview from './CourseDetail/Overview';
+import Review from './CourseDetail/Review';
 const UXDesignCourse = () => {
-    const [currentTab, setCurrentTab] = useState('OVERVIEW');
+    const [currentTab, setCurrentTab] = useState('REVIEW');
 
     const handleChangeTab = (tab) => {
         setCurrentTab(tab);
@@ -56,7 +57,13 @@ const UXDesignCourse = () => {
                 </View>
 
                 {/* Lesson List */}
-                {currentTab === 'OVERVIEW' ? <CourseDetail_Overview /> : currentTab === 'LESSONS' ? <CourseDetail_Lesson /> : null}
+                {currentTab === 'OVERVIEW' ? (
+                    <CourseDetail_Overview />
+                ) : currentTab === 'LESSONS' ? (
+                    <CourseDetail_Lesson />
+                ) : currentTab === 'REVIEW' ? (
+                    <Review />
+                ) : null}
 
                 {/* Pricing Section */}
                 <View style={styles.priceContainer}>

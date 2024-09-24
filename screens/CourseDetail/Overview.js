@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import yourImage from '../../assets/image/CourseDetail_img/abc.jpg';
+// import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+// import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 
 const CourseDetail_Overview = () => {
     return (
@@ -114,7 +116,7 @@ const CourseItem = ({ image, title, instructor, price, rating, numReviews, numLe
                     </View>
                 </View>
             </View>
-            <Pressable style={styles.bookmark}>a</Pressable>
+            <Pressable style={styles.bookmark}>mark</Pressable>
         </View>
     );
 };
