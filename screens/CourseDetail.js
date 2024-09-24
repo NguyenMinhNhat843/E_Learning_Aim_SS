@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, Pressable, ScrollView } from 'react-nati
 import { Ionicons } from '@expo/vector-icons'; // For icons like star or play button
 
 import CourseDetail_Lesson from './CourseDetail/Lesson';
+import CourseDetail_Overview from './CourseDetail/Overview';
 const UXDesignCourse = () => {
     const [currentTab, setCurrentTab] = useState('LESSONS');
 
@@ -55,7 +56,7 @@ const UXDesignCourse = () => {
                 </View>
 
                 {/* Lesson List */}
-                <CourseDetail_Lesson />
+                {currentTab === 'OVERVIEW' ? <CourseDetail_Overview /> : currentTab === 'LESSONS' ? <CourseDetail_Lesson /> : null}
 
                 {/* Pricing Section */}
                 <View style={styles.priceContainer}>
