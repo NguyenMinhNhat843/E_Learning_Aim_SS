@@ -4,7 +4,47 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeart, faComment, faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as solidHeart, faFire } from '@fortawesome/free-solid-svg-icons';
 
-const Question_item = () => {
+const data_question = [
+    {
+        id: '1',
+        avatar: '../../assets/image/course_info/banner.jpg',
+        username: 'Jane Barry',
+        time: '1 day ago',
+        question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
+        like: 23,
+        comment: 5,
+    },
+    {
+        id: '2',
+        avatar: '../../assets/image/course_info/banner.jpg',
+        username: 'Jane Barry',
+        time: '1 day ago',
+        question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
+        like: 23,
+        comment: 5,
+    },
+    {
+        id: '3',
+        avatar: '../../assets/image/course_info/banner.jpg',
+        username: 'Jane Barry',
+        time: '1 day ago',
+        question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
+        like: 23,
+        comment: 5,
+    },
+    {
+        id: '4',
+        avatar: '../../assets/image/course_info/banner.jpg',
+        username: 'Jane Barry',
+        time: '1 day ago',
+        question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
+        like: 23,
+        comment: 5,
+    },
+];
+const Question_item = ({ item }) => {
+    const { avatar, username, time, question, like, comment } = item;
+
     const [likeQuestionlected, setLikeCQuestionSelected] = useState(false);
     const handleQuestionCourse = () => {
         setLikeCQuestionSelected(!likeQuestionlected);
@@ -18,14 +58,12 @@ const Question_item = () => {
                     <Image style={styles.avatar} source={require('../../assets/image/course_info/banner.jpg')} resizeMode="cover" />
                 </View>
                 <View style={styles.user_name}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Jane Barry</Text>
-                    <Text style={{ fontSize: 14, color: '#ccc' }}>1 day ago</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{username}</Text>
+                    <Text style={{ fontSize: 14, color: '#ccc' }}>{time}</Text>
                 </View>
             </View>
             {/* comment */}
-            <Text style={styles.question}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates
-            </Text>
+            <Text style={styles.question}>{question}</Text>
             {/* like and comment */}
             <View style={styles.like_comment}>
                 <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
@@ -35,9 +73,9 @@ const Question_item = () => {
                         <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
                     )}
                 </Pressable>
-                <Text style={{ paddingRight: 24 }}>23</Text>
+                <Text style={{ paddingRight: 24 }}>{like}</Text>
                 <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
-                <Text style={{ paddingRight: 16 }}>5 comment</Text>
+                <Text style={{ paddingRight: 16 }}>{comment} comment</Text>
             </View>
         </View>
     );
@@ -46,7 +84,7 @@ const Question_item = () => {
 const Course_info_QA = () => {
     return (
         <View style={styles.container}>
-            <FlatList data={[1, 2, 3]} renderItem={() => <Question_item />} keyExtractor={(index) => index.toString()} />
+            <FlatList data={data_question} renderItem={({ item }) => <Question_item item={item} />} keyExtractor={(item) => item.id} />
             {/* my comment */}
             <View style={styles.my_comment}>
                 <View style={styles.avatar_wrap}>
