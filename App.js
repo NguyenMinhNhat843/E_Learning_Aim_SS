@@ -5,18 +5,20 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import CourseInfo from './screens/Course_Info/Course_Info_main';
+import Home from './screens/Home/Home';
 
 export default function App() {
     const Stack = createNativeStackNavigator();
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="CourseInfo"
+                initialRouteName="Home"
                 screenOptions={{
-                    headerShown: true,
+                    headerShown: false,
                 }}
             >
                 <Stack.Screen name="CourseInfo" component={CourseInfo} />
+                <Stack.Screen name="Home" component={Home} />
             </Stack.Navigator>
         </NavigationContainer>
     );
