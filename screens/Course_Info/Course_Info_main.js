@@ -6,9 +6,10 @@ import { faBookmark, faHeart } from '@fortawesome/free-regular-svg-icons';
 
 import Course_info_QA from './Course_info_QA';
 import Course_info_project from './Course_info_project';
+import Lesson_Tab from './Course_info_lessons';
 
 const Course_Info_main = () => {
-    const [tabSelected, setTabSelected] = useState('PROJECT');
+    const [tabSelected, setTabSelected] = useState('LESSONS');
     const handleTabSelected = (tab) => {
         setTabSelected(tab);
     };
@@ -73,7 +74,7 @@ const Course_Info_main = () => {
                 </View>
 
                 {/* Tab Q&A */}
-                {tabSelected === 'Q&A' ? <Course_info_QA /> : tabSelected === 'PROJECT' ? <Course_info_project /> : <Text>LESSONS</Text>}
+                {tabSelected === 'Q&A' ? <Course_info_QA /> : tabSelected === 'PROJECT' ? <Course_info_project /> : <Lesson_Tab />}
             </View>
         </ScrollView>
     );
