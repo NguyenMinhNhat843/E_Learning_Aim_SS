@@ -8,6 +8,7 @@ import Popular_course from './Popular_course';
 import Recomment_course from './Recomment_course';
 import Course_inspires from './Course_inspires';
 import Top_teacher from './Top_teacher';
+import Footer from './Footer';
 
 const Home = () => {
     return (
@@ -52,9 +53,7 @@ const Home = () => {
                 <Top_teacher />
 
                 {/* footer */}
-                <View>
-                    <Text>Footer</Text>
-                </View>
+                <Footer style={styles.footer} />
             </View>
         </ScrollView>
     );
@@ -63,6 +62,7 @@ const Home = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
+        position: 'relative',
     },
     header: {
         height: 100,
@@ -102,6 +102,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 0,
     },
 });
 
