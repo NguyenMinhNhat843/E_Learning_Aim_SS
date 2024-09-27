@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHouse, faMagnifyingGlass, faBookOpen, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const data = [
     {
@@ -26,25 +27,33 @@ const data = [
     },
 ];
 
-const Render_item = ({ item }) => {
-    const [isFocused, setIsFocused] = React.useState(false);
-    const handleFocus = () => {
-        setIsFocused(true);
-    };
+const Render_item = ({ item, pageSelected, handlePageSelected }) => {
+    const page = item.name.toUpperCase();
     return (
-        <TouchableOpacity style={styles.item} onPress={handleFocus}>
-            <FontAwesomeIcon style={{ color: isFocused && 'cyan' }} icon={item.icon} />
-            <Text style={{ marginLeft: 8, color: isFocused && 'cyan' }}>{item.name}</Text>
+        <TouchableOpacity style={styles.item} onPress={() => handlePageSelected(page)}>
+            <FontAwesomeIcon style={{ color: pageSelected === page && 'cyan' }} icon={item.icon} />
+            <Text style={{ marginLeft: 8, color: pageSelected === page && 'cyan' }}>{item.name}</Text>
         </TouchableOpacity>
     );
 };
 
 const Footer = () => {
+    const navigation = useNavigation();
+    const [pageSelected, setPageSelected] = React.useState('HOME');
+    const handlePageSelected = (page) => {
+        setPageSelected(page);
+        if (page === 'HOME') page = 'Home';
+        if (page === 'SEARCH') page = 'Search';
+        if (page === 'MY COURSE') page = 'CourseInfo';
+        if (page === 'PROFILE') page = 'Profile';
+        navigation.navigate(page);
+    };
+
     return (
         <View style={styles.container}>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <Render_item item={item} />}
+                renderItem={({ item }) => <Render_item item={item} pageSelected={pageSelected} handlePageSelected={handlePageSelected} />}
                 keyExtractor={(item) => item.id.toString()}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
