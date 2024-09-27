@@ -5,9 +5,10 @@ import { faChevronLeft, faEllipsisVertical, faShareNodes, faHeart as solidHeart 
 import { faBookmark, faHeart } from '@fortawesome/free-regular-svg-icons';
 
 import Course_info_QA from './Course_info_QA';
+import Course_info_project from './Course_info_project';
 
 const Course_Info_main = () => {
-    const [tabSelected, setTabSelected] = useState('Q&A');
+    const [tabSelected, setTabSelected] = useState('PROJECT');
     const handleTabSelected = (tab) => {
         setTabSelected(tab);
     };
@@ -72,7 +73,7 @@ const Course_Info_main = () => {
                 </View>
 
                 {/* Tab Q&A */}
-                <Course_info_QA />
+                {tabSelected === 'Q&A' ? <Course_info_QA /> : tabSelected === 'PROJECT' ? <Course_info_project /> : <Text>LESSONS</Text>}
             </View>
         </ScrollView>
     );
