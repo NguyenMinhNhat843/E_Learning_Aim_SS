@@ -19,7 +19,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="Search_result"
+                initialRouteName="MyCourses"
                 screenOptions={{
                     headerShown: false,
                 }}
