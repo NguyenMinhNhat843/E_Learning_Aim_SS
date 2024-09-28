@@ -75,7 +75,7 @@ const MyCourses = () => {
       <Text style={styles.header}>My Courses</Text>
       
         <Image
-          source={require('../assets/image/myCourses_img/banner.png')} 
+        //   source={require('./assets/image/myCourses_img/banner.png')} 
           style={styles.bannerImage}
         />
 
