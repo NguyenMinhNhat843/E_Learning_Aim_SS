@@ -41,38 +41,38 @@ const data_course = [
     },
 ];
 
-const Render_item_teacher = ({ item }) => {
-    const [isStar, setIsStar] = React.useState(false);
-    const handleStar = () => {
-        setIsStar(!isStar);
+const Top_teacher = ({navigation}) => {
+    const Render_item_teacher = ({ item }) => {
+        const [isStar, setIsStar] = React.useState(false);
+        const handleStar = () => {
+            setIsStar(!isStar);
+        };
+    
+        return (
+            <TouchableOpacity style={styles.teacher_item} onPress={() => navigation.navigate('TeacherProfile')}>
+                <Image source={item.image} style={styles.teacher_item_image} />
+                <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
+                    <View>
+                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
+                        <Text style={{ color: '#333' }}>{item.level}</Text>
+                    </View>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={handleStar}>
+                        {isStar ? (
+                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
+                        ) : (
+                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
+                        )}
+                    </TouchableOpacity>
+                    <Text style={{ paddingRight: 16 }}>
+                        {item.rating} ({item.ratingNumber})
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        );
     };
 
-    return (
-        <View style={styles.teacher_item}>
-            <Image source={item.image} style={styles.teacher_item_image} />
-            <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
-                <View>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
-                    <Text style={{ color: '#333' }}>{item.level}</Text>
-                </View>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity onPress={handleStar}>
-                    {isStar ? (
-                        <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
-                    ) : (
-                        <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
-                    )}
-                </TouchableOpacity>
-                <Text style={{ paddingRight: 16 }}>
-                    {item.rating} ({item.ratingNumber})
-                </Text>
-            </View>
-        </View>
-    );
-};
-
-const Top_teacher = () => {
     return (
         <View style={styles.container}>
             <View style={styles.popular_course_header}>
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 16,
         backgroundColor: '#fff',
+        paddingBottom: 100,
     },
     popular_course_header: {
         flexDirection: 'row',

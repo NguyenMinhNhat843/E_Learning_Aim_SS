@@ -47,46 +47,7 @@ const CourseDetailsWithLessons = () => {
 
   return (
     <View style={styles.container}>
-      <View style = {styles.headerBar}>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Course details</Text>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
       <ScrollView style={styles.subContainer}>
-      {/* Header with video */}
-      <View style={styles.header}>
-        <Video
-          source={require('../assets/video/WhatIsUXDesign.mp4')} // Đường dẫn tới video
-          style={styles.video}
-          useNativeControls={true}  //Tạo ra các điều khiển phát/dừng mặc định (phát video khi nhấn vào).
-          controls={true}          // Hiển thị các điều khiển phát video như play/pause
-          resizeMode="contain"     // Điều chỉnh video vừa với khung hình
-          shouldPlay={false}       // Không rự động phát 
-          // resizeMode="cover"    // Chế độ hiển thị video
-          // paused={false}        // Tự động phát khi tải
-        />
-        <Text style={styles.title}>UX Foundation: Introduction to UX Design</Text>
-        <Text style={styles.subText}>⭐4.5 (1233) • 12 lessons</Text>
-      </View>
-
-      {/* Tab Bar */}
-      <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>OVERVIEW</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.tab, styles.activeTab]}>
-          <Text style={[styles.tabText, styles.activeTabText]}>LESSONS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>REVIEW</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Lesson Groups */}
       {lessonGroups.map((group) => (
         <View key={group.id}>
@@ -112,15 +73,6 @@ const CourseDetailsWithLessons = () => {
         </View>
       ))}
       </ScrollView>
-
-      {/* Footer with price and add to cart button */}
-      <View style={styles.footer}>
-        <Text style={styles.price}>$259 {'\n'} 
-          <Text style={styles.discount}> 80% Disc 1020$</Text></Text>
-        <TouchableOpacity style={styles.addToCartButton}>
-          <Text style={styles.buttonText}>🛒Add to cart</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -232,7 +184,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#f3f3f3',
-    marginTop: 20,
+    // marginTop: 20,
     marginRight: -20,
     marginLeft: -20,
     marginBottom: -10,

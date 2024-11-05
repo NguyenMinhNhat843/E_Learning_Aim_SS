@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { Video } from 'expo-av';
-import { Ionicons } from '@expo/vector-icons'; 
 
 const reviews = [
   {
     id: '1',
     name: 'Jinny Oslin',
-    avatar: require('../assets/image/courseDetailsReview_img/Commentator1.png'),
+    avatar: require('../../assets/image/courseDetailsReview_img/Commentator1.png'),
     review: 'Nostrud excepteur magna id est quis in aliqua consequat. Exercitation enim eiusmod elit sint labor... ',
     rating: 5,
     time: 'A day ago',
@@ -15,7 +13,7 @@ const reviews = [
   {
     id: '2',
     name: 'Jane Barry',
-    avatar: require('../assets/image/courseDetailsReview_img/Commentator2.png'),
+    avatar: require('../../assets/image/courseDetailsReview_img/Commentator2.png'),
     review: 'Deserunt minim incididunt cillum nostrud do voluptate excepteur excepteur minim ex minim est',
     rating: 3,
     time: 'A day ago',
@@ -23,7 +21,7 @@ const reviews = [
   {
     id: '3',
     name: 'Claire Mignard',
-    avatar: require('../assets/image/courseDetailsReview_img/Commentator3.png'),
+    avatar: require('../../assets/image/courseDetailsReview_img/Commentator3.png'),
     review: 'Magna id sint irure in cillum esse nisi dolor laboris ullamco. Consecuter proident...',
     rating: 4,
     time: 'A day ago',
@@ -31,7 +29,7 @@ const reviews = [
   {
     id: '4',
     name: 'Mai Chien No',
-    avatar: require('../assets/image/courseDetailsReview_img/Commentator4.jpg'),
+    avatar: require('../../assets/image/courseDetailsReview_img/Commentator4.jpg'),
     review: 'Great course, reasonable tuition, everyone should take it!',
     rating: 4,
     time: 'A day ago',
@@ -39,7 +37,7 @@ const reviews = [
   {
     id: '5',
     name: 'Khac Truong',
-    avatar: require('../assets/image/courseDetailsReview_img/Commentator5.png'),
+    avatar: require('../../assets/image/courseDetailsReview_img/Commentator5.png'),
     review: 'The course was pretty bad, I could not follow it very well!!!',
     rating: 2,
     time: 'A day ago',
@@ -61,44 +59,7 @@ const CourseDetailsWithReviews = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerBar}>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Course details</Text>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView style={styles.subContainer}>
-        <View style={styles.header}>
-          <Video
-            source={require('../assets/video/WhatIsUXDesign.mp4')} // Đường dẫn tới video
-            style={styles.video}
-            useNativeControls={true}
-            controls={true}
-            resizeMode="contain"
-            shouldPlay={false}
-          />
-          
-          <Text style={styles.title}>UX Foundation: Introduction to UX Design</Text>
-          <Text style={styles.subText}>⭐4.5 (1233) • 12 lessons</Text>
-        </View>
-
-        {/* Tab Bar */}
-        <View style={styles.tabBar}>
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.tabText}>OVERVIEW</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.tabText}>LESSONS</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.tab, styles.activeTab]}>
-            <Text style={[styles.tabText, styles.activeTabText]}>REVIEW</Text>
-          </TouchableOpacity>
-        </View>
-
+      {/* <ScrollView style={styles.subContainer}> */}
         {/* Rating Section */}
         <View style={styles.ratingSection}>
           <Text style={styles.ratingText}>⭐4.5/5</Text>
@@ -109,7 +70,7 @@ const CourseDetailsWithReviews = () => {
         </View>
 
         {/* Filter Reviews by Stars */}
-        <ScrollView horizontal style={styles.filterSection}>
+        <View horizontal style={styles.filterSection}>
           <TouchableOpacity style={styles.filterButton} onPress={() => setSelectedRating('ALL')}>
             <Text style={styles.filterText}>All</Text>
           </TouchableOpacity>
@@ -128,10 +89,11 @@ const CourseDetailsWithReviews = () => {
           <TouchableOpacity style={styles.filterButton} onPress={() => setSelectedRating(1)}>
             <Text style={styles.filterText}>1 ★</Text>
           </TouchableOpacity>
-        </ScrollView>
+        </View>
 
         {/* Reviews Section */}
         <FlatList
+        //   style={{height: 400}}
           data={filterReviews()} // Lọc các đánh giá
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
@@ -146,18 +108,7 @@ const CourseDetailsWithReviews = () => {
             </View>
           )}
         />
-      </ScrollView>
-
-      {/* Price and button */}
-      <View style={styles.footer}>
-        <Text style={styles.price}>
-          $259 {'\n'} 
-          <Text style={styles.discount}> 80% Disc 1020$</Text>
-        </Text>
-        <TouchableOpacity style={styles.addToCartButton}>
-          <Text style={styles.buttonText}>🛒Add to cart</Text>
-        </TouchableOpacity>
-      </View>
+      {/* </ScrollView> */}
     </View>
   );
 };
@@ -246,6 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     padding: 5,
     borderRadius: 5,
+    marginRight:15,
   },
   viewAllText: {
     color: '#fff',
@@ -297,7 +249,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#f3f3f3',
-    marginTop: 20,
+    // marginTop: 20,
     marginRight: -20,
     marginLeft: -20,
     marginBottom: -10,

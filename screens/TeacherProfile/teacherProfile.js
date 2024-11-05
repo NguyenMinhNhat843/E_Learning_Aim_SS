@@ -1,6 +1,7 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
+import CourseDetails_Review from '../CourseDetail/CourseDetails_Review';
 
 const uiUxCourses = [
   {
@@ -10,7 +11,7 @@ const uiUxCourses = [
     teacher: 'Sara Weise',
     lessons: '12 lessons',
     rating: '⭐4.5 (1233)',
-    image: require('../assets/image/teacherProfile_img/UX_Foundation.png'), // Replace with actual image
+    image: require('../../assets/image/teacherProfile_img/UX_Foundation.png'), // Replace with actual image
   },
   {
     id: '2',
@@ -19,7 +20,7 @@ const uiUxCourses = [
     teacher: 'Sara Weise',
     lessons: '8 lessons',
     rating: '⭐4.5 (1233)',
-    image: require('../assets/image/teacherProfile_img/MobileApp.png') // Replace with actual image
+    image: require('../../assets/image/teacherProfile_img/MobileApp.png') // Replace with actual image
   },
 ];
 
@@ -31,7 +32,7 @@ const graphicCourses = [
     teacher: 'Sara Weise',
     lessons: '10 lessons',
     rating: '⭐4.5 (1233)',
-    image: require('../assets/image/teacherProfile_img/DigitalPoster.png'), // Replace with actual image
+    image: require('../../assets/image/teacherProfile_img/DigitalPoster.png'), // Replace with actual image
   },
   {
     id: '4',
@@ -40,73 +41,15 @@ const graphicCourses = [
     teacher: 'Sara Weise',
     lessons: '6 lessons',
     rating: '⭐4.5 (1233)',
-    image: require('../assets/image/teacherProfile_img/PatternsDesign.png'), // Replace with actual image
+    image: require('../../assets/image/teacherProfile_img/PatternsDesign.png'), // Replace with actual image
   },
 ];
 
-const CourseCard = ({ course }) => (
-  <View style={styles.courseCard}>
-    <Image source={course.image} style={styles.courseImage} />
-    <View style={styles.courseDetails}>
-      <Text style={styles.courseTitle}>{course.title}</Text>
-      <Text style={styles.courseTeacher}>{course.teacher}</Text>
-      <Text style={styles.coursePrice}>{course.price}</Text>
-      <View style={styles.courseRating}>
-        <Text>{course.rating}</Text>
-      </View>
-      <Text>{course.lessons}</Text>
-    </View>
-  </View>
-);
 
-const TeacherProfile = () => {
-  return (
-    <View style={styles.container}>
-      <View style = {styles.headerBar}>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Teacher's profile</Text>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-    </View>
-
-    <ScrollView style={styles.subContainer}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Image
-          source={require('../assets/image/teacherProfile_img/headerImage.png')} // Replace with the banner image URL
-          style={styles.headerImage}
-        />
-      </View>
-
-      {/* Teacher Info */}
-      <View style={styles.teacherInfo}>
-        <Image
-          source={require('../assets/image/teacherProfile_img/Teacher.png')} // Replace with teacher profile image
-          style={styles.teacherAvatar}
-        />
-        <Text style={styles.teacherName}>Sara Weise</Text>
-        <TouchableOpacity style = {styles.positionName}><Text style = {styles.positionText}>Teacher</Text></TouchableOpacity>
-        <Text style={styles.teacherTitle}>UI/UX Designer</Text>
-        <Text style={styles.teacherLocation}>📍New York - 09:30 AM</Text>
-      </View>
-
-      {/* Tabs */}
-      <View style={styles.tabs}>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>OVERVIEW</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.activeTab}>
-          <Text style={styles.activeTabText}>COURSES</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>REVIEW</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* UI/UX Design Section */}
+const TeacherProfile = ({navigation}) => {
+    const COURSES_OF_TEACHER = () => (
+        <View>
+            {/* UI/UX Design Section */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>UI/UX Design</Text>
         <TouchableOpacity>
@@ -135,6 +78,82 @@ const TeacherProfile = () => {
         renderItem={({ item }) => <CourseCard course={item} />}
         contentContainerStyle={styles.courseList}
       />
+        </View>
+    );
+
+    const [selectedTab, setSelectedTab] = useState('COURSES');
+
+    const filter = () => {
+        if (selectedTab === 'COURSES') {
+            return COURSES_OF_TEACHER();
+        }
+        if (selectedTab === 'REVIEW') {
+            return <CourseDetails_Review />
+        }
+        return COURSES_OF_TEACHER();
+      };
+
+    const CourseCard = ({ course }) => (
+        <TouchableOpacity style={styles.courseCard} onPress={() => navigation.navigate("CourseDetails_OverView")}>
+          <Image source={course.image} style={styles.courseImage} />
+          <View style={styles.courseDetails}>
+            <Text style={styles.courseTitle}>{course.title}</Text>
+            <Text style={styles.courseTeacher}>{course.teacher}</Text>
+            <Text style={styles.coursePrice}>{course.price}</Text>
+            <View style={styles.courseRating}>
+              <Text>{course.rating}</Text>
+            </View>
+            <Text>{course.lessons}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+
+  return (
+    <View style={styles.container}>
+      <View style = {styles.headerBar}>
+        <TouchableOpacity style={styles.iconButton}>
+          <Ionicons name="arrow-back" size={24} color="black" onPress={() => navigation.goBack()}/>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Teacher's profile</Text>
+        <TouchableOpacity style={styles.iconButton}>
+          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+        </TouchableOpacity>
+    </View>
+
+    <ScrollView style={styles.subContainer}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Image
+          source={require('../../assets/image/teacherProfile_img/headerImage.png')} // Replace with the banner image URL
+          style={styles.headerImage}
+        />
+      </View>
+
+      {/* Teacher Info */}
+      <View style={styles.teacherInfo}>
+        <Image
+          source={require('../../assets/image/teacherProfile_img/Teacher.png')} // Replace with teacher profile image
+          style={styles.teacherAvatar}
+        />
+        <Text style={styles.teacherName}>Sara Weise</Text>
+        <TouchableOpacity style = {styles.positionName}><Text style = {styles.positionText}>Teacher</Text></TouchableOpacity>
+        <Text style={styles.teacherTitle}>UI/UX Designer</Text>
+        <Text style={styles.teacherLocation}>📍New York - 09:30 AM</Text>
+      </View>
+
+      {/* Tabs */}
+      <View style={styles.tabs}>
+      <TouchableOpacity onPress={() => setSelectedTab('COURSES')} style={selectedTab === 'COURSES' ? styles.activeTab : styles.tab}>
+            <Text style={selectedTab === 'COURSES' ? styles.activeTabText : styles.tabText}>COURSES</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setSelectedTab('REVIEW')} style={selectedTab === 'REVIEW' ? styles.activeTab : styles.tab}>
+            <Text style={selectedTab === 'REVIEW' ? styles.activeTabText : styles.tabText}>REVIEW</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View>
+        {filter()}
+      </View>
     </ScrollView>
     </View>
   );

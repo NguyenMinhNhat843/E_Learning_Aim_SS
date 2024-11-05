@@ -1,38 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHouse, faMagnifyingGlass, faBookOpen, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const data = [
-    {
-        id: 1,
-        icon: faHouse,
-        name: 'Home',
-    },
-    {
-        id: 2,
-        icon: faMagnifyingGlass,
-        name: 'Search',
-    },
-    {
-        id: 3,
-        icon: faBookOpen,
-        name: 'My Course',
-    },
-    {
-        id: 4,
-        icon: faUser,
-        name: 'Profile',
-    },
+    { id: 1, icon: faHouse, name: 'Home' },
+    { id: 2, icon: faMagnifyingGlass, name: 'Search' },
+    { id: 3, icon: faBookOpen, name: 'My Course' },
+    { id: 4, icon: faUser, name: 'Profile' },
 ];
 
 const Render_item = ({ item, pageSelected, handlePageSelected }) => {
     const page = item.name.toUpperCase();
+    const color = pageSelected === page ? 'cyan' : 'black'; // Đặt màu theo điều kiện
+
     return (
         <TouchableOpacity style={styles.item} onPress={() => handlePageSelected(page)}>
-            <FontAwesomeIcon style={{ color: pageSelected === page && 'cyan' }} icon={item.icon} />
-            <Text style={{ marginLeft: 8, color: pageSelected === page && 'cyan' }}>{item.name}</Text>
+            <FontAwesomeIcon icon={item.icon} style={{ color: color }} />
+            <Text style={{ marginLeft: 8, color: color }}>{item.name}</Text>
         </TouchableOpacity>
     );
 };
@@ -40,20 +26,38 @@ const Render_item = ({ item, pageSelected, handlePageSelected }) => {
 const Footer = () => {
     const navigation = useNavigation();
     const [pageSelected, setPageSelected] = React.useState('HOME');
+
     const handlePageSelected = (page) => {
-        setPageSelected(page);
-        if (page === 'HOME') page = 'Home';
-        if (page === 'SEARCH') page = 'Search';
-        if (page === 'MY COURSE') page = 'CourseInfo';
-        if (page === 'PROFILE') page = 'Profile';
-        navigation.navigate(page);
+        setPageSelected(page); // Cập nhật màu ngay lập tức
+
+        let targetPage = page;
+        if (page === 'HOME') targetPage = 'Home';
+        else if (page === 'SEARCH') targetPage = 'Search';
+        else if (page === 'MY COURSE') targetPage = 'MyCourses';
+        else if (page === 'PROFILE') targetPage = 'UserProfile';
+
+        navigation.navigate(targetPage); // Chuyển đến trang
     };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const currentRoute = navigation.getState().routes[navigation.getState().index].name;
+            console.log("Current Route: ", currentRoute); // Debug
+            setPageSelected(currentRoute); // Cập nhật màu sắc dựa trên trang hiện tại
+        }, [navigation])
+    );
 
     return (
         <View style={styles.container}>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <Render_item item={item} pageSelected={pageSelected} handlePageSelected={handlePageSelected} />}
+                renderItem={({ item }) => (
+                    <Render_item
+                        item={item}
+                        pageSelected={pageSelected}
+                        handlePageSelected={handlePageSelected}
+                    />
+                )}
                 keyExtractor={(item) => item.id.toString()}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}

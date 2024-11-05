@@ -53,52 +53,53 @@ const data_course = [
     },
 ];
 
-const Render_item_course = ({ item }) => {
-    const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
-    const handleBookMark = () => {
-        setIsBookMark(!isBookMark);
-    };
 
-    const [isStar, setIsStar] = React.useState(false);
-    const handleStar = () => {
-        setIsStar(!isStar);
-    };
-
-    return (
-        <View style={styles.course_item}>
-            <Image source={item.image} style={styles.course_item_image} />
-            <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
-                <View>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
-                    <Text style={{ color: '#333' }}>{item.author}</Text>
-                    <Text style={{ color: 'cyan', fontWeight: 'bold' }}>${item.price}</Text>
+const Recommen_course = ({navigation}) => {
+    const Render_item_course = ({ item }) => {
+        const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
+        const handleBookMark = () => {
+            setIsBookMark(!isBookMark);
+        };
+    
+        const [isStar, setIsStar] = React.useState(false);
+        const handleStar = () => {
+            setIsStar(!isStar);
+        };
+    
+        return (
+            <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView")}>
+                <Image source={item.image} style={styles.course_item_image} />
+                <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
+                    <View>
+                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
+                        <Text style={{ color: '#333' }}>{item.author}</Text>
+                        <Text style={{ color: 'cyan', fontWeight: 'bold' }}>${item.price}</Text>
+                    </View>
+                    <TouchableOpacity onPress={handleBookMark}>
+                        {isBookMark ? (
+                            <FontAwesomeIcon style={{ paddingTop: 8 }} icon={solidBookMark} />
+                        ) : (
+                            <FontAwesomeIcon style={{ paddingTop: 8 }} icon={faBookmark} />
+                        )}
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={handleBookMark}>
-                    {isBookMark ? (
-                        <FontAwesomeIcon style={{ paddingTop: 8 }} icon={solidBookMark} />
-                    ) : (
-                        <FontAwesomeIcon style={{ paddingTop: 8 }} icon={faBookmark} />
-                    )}
-                </TouchableOpacity>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity onPress={handleStar}>
-                    {isStar ? (
-                        <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
-                    ) : (
-                        <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
-                    )}
-                </TouchableOpacity>
-                <Text style={{ paddingRight: 16 }}>
-                    {item.rating} ({item.ratingNumber})
-                </Text>
-                <Text>{item.lessonsNumber} lessons</Text>
-            </View>
-        </View>
-    );
-};
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={handleStar}>
+                        {isStar ? (
+                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
+                        ) : (
+                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
+                        )}
+                    </TouchableOpacity>
+                    <Text style={{ paddingRight: 16 }}>
+                        {item.rating} ({item.ratingNumber})
+                    </Text>
+                    <Text>{item.lessonsNumber} lessons</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    };
 
-const Recommen_course = () => {
     return (
         <View style={styles.container}>
             <View style={styles.popular_course_header}>

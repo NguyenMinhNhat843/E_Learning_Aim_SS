@@ -10,64 +10,70 @@ import Course_inspires from './Course_inspires';
 import Top_teacher from './Top_teacher';
 import Footer from './Footer';
 
-const Home = () => {
+const Home = ({navigation}) => {
     return (
-        <ScrollView>
-            <View>
-                {/* header */}
-                <View style={styles.header}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
-                        <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faCartShopping} />
-                        <FontAwesomeIcon style={{ color: 'white', height: '100%', width: 24 }} icon={faBell} />
+        <View style={styles.container}>
+            <ScrollView style={styles.scrollContent}>
+                <View>
+                    {/* header */}
+                    <View style={styles.header}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
+                            <FontAwesomeIcon style={{ color: 'white', paddingRight: 46, height: '100%', width: 24 }} icon={faCartShopping} />
+                            <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faBell} />
+                        </View>
+                        <View>
+                            <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
+                        </View>
                     </View>
-                    <View>
-                        <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
+                    {/* banner */}
+                    <View style={styles.banner_block}>
+                        <Image style={styles.banner_img} source={require('../../assets/image/course_info/banner.jpg')} />
+                        <View style={styles.banner_info}>
+                            <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>PROJECT MANAGER</Text>
+                            <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>20% OFF</Text>
+                            <TouchableOpacity style={styles.button_banner}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'white' }}>Join now</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
+
+                    {/* Category section */}
+                    <Category />
+
+                    {/* popular course */}
+                    <Popular_course navigation={navigation}/>
+
+                    {/* recommen course */}
+                    <Recomment_course navigation={navigation}/>
+
+                    {/* course inspires */}
+                    <Course_inspires navigation={navigation}/>
+
+                    {/* top teacher */}
+                    <Top_teacher navigation={navigation}/>
                 </View>
-                {/* banner */}
-                <View style={styles.banner_block}>
-                    <Image style={styles.banner_img} source={require('../../assets/image/course_info/banner.jpg')} />
-                    <View style={styles.banner_info}>
-                        <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>PROJECT MANAGER</Text>
-                        <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>20% OFF</Text>
-                        <TouchableOpacity style={styles.button_banner}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'white' }}>Join now</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+            </ScrollView>
 
-                {/* Category section */}
-                <Category />
-
-                {/* popular course */}
-                <Popular_course />
-
-                {/* recommen course */}
-                <Recomment_course />
-
-                {/* course inspires */}
-                <Course_inspires />
-
-                {/* top teacher */}
-                <Top_teacher />
-
-                {/* footer */}
-                <Footer style={styles.footer} />
+            {/* Footer cố định */}
+            <View style={styles.footerContainer}>
+                <Footer />
             </View>
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
-        position: 'relative',
+        flex: 1,
     },
     header: {
-        height: 100,
+        height: 125,
         backgroundColor: 'cyan',
-        padding: 16,
+        paddingTop: 40,
+        paddingHorizontal: 16,
+        paddingBottom: 16,
+        
     },
     // banner
     banner_block: {
@@ -103,10 +109,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    footer: {
+    scrollContent: {
+        flex: 1,
+    },
+    footerContainer: {
         position: 'absolute',
         bottom: 0,
-    },
+    }
 });
 
 export default Home;
