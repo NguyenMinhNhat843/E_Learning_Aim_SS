@@ -15,19 +15,21 @@ import CourseDetails_Review from './screens/CourseDetails_Review';
 import CourseDetails_Lession from './screens/CourseDetails_Lession';
 import Login from './screens/Login_Logout/Login';
 import Signup from './screens/Login_Logout/Signup';
+import ForgotPassword from './screens/Login_Logout/ForgotPassword';
 
 export default function App() {
     const Stack = createNativeStackNavigator();
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="Signup"
+                initialRouteName="ForgotPassword"
                 screenOptions={{
                     headerShown: false,
                 }}
             >
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
+                <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="Search" component={Search} />
                 <Stack.Screen name="Search_result" component={Search_result} />
