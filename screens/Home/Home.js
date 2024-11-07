@@ -12,19 +12,20 @@ import Footer from './Footer';
 
 const Home = () => {
     return (
-        <ScrollView>
-            <View>
-                {/* header */}
-                <View style={styles.header}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
-                        <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faCartShopping} />
-                        <FontAwesomeIcon style={{ color: 'white', height: '100%', width: 24 }} icon={faBell} />
-                    </View>
-                    <View>
-                        <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
-                    </View>
+        <View style={{ justifyContent: 'space-between', height: '100vh' }}>
+            {/* header */}
+            <View style={styles.header}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
+                    <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faCartShopping} />
+                    <FontAwesomeIcon style={{ color: 'white', height: '100%', width: 24 }} icon={faBell} />
                 </View>
+                <View>
+                    <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
+                </View>
+            </View>
+
+            <ScrollView style={{ height: 500, paddingBottom: 32 }}>
                 {/* banner */}
                 <View style={styles.banner_block}>
                     <Image style={styles.banner_img} source={require('../../assets/image/course_info/banner.jpg')} />
@@ -51,11 +52,11 @@ const Home = () => {
 
                 {/* top teacher */}
                 <Top_teacher />
+            </ScrollView>
 
-                {/* footer */}
-                <Footer style={styles.footer} />
-            </View>
-        </ScrollView>
+            {/* footer */}
+            <Footer style={styles.footer} />
+        </View>
     );
 };
 

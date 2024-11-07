@@ -22,7 +22,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="ForgotPassword"
+                initialRouteName="Home"
                 screenOptions={{
                     headerShown: false,
                 }}

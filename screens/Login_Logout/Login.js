@@ -13,6 +13,9 @@ const Login = () => {
     const navigation_to_forgotPassword = () => {
         navigation.navigate('ForgotPassword');
     };
+    const navigation_to_home = () => {
+        navigation.navigate('Home');
+    };
 
     return (
         <View style={styles.container}>
@@ -45,9 +48,9 @@ const Login = () => {
 
             {/* login button */}
             <View style={{ width: '100%' }}>
-                <Pressable style={styles.login_button}>
-                    <Text style={{ color: 'white', fontSize: 16, fontWeight: 'medium' }}>Log in to my Account</Text>
-                </Pressable>
+                <TouchableOpacity style={styles.login_button} onPress={navigation_to_home}>
+                    <Text style={{ color: 'white', fontSize: 16, fontWeight: 'medium', textAlign: 'center' }}>Log in to my Account</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 8 }}>
                     <Text style={{ fontSize: 16 }}>you don't have an account yet?</Text>
                     <TouchableOpacity style={styles.signup_link} onPress={navigation_to_signup}>
