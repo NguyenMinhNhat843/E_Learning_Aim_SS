@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import CourseInfo from './screens/Course_Info/Course_Info_main';
+import CourseLearning from './screens/Course_learning/Course_learning_main';
 import Home from './screens/Home/Home';
 import Course_inspires from './screens/Home/Course_inspires';
 import Recomment_course from './screens/Home/Recomment_course';
@@ -39,7 +39,7 @@ export default function App() {
                 <Stack.Screen name="Popular_course" component={Popular_course} />
                 <Stack.Screen name="Search" component={Search} options={{ animationEnabled: false }}/>
                 <Stack.Screen name="Search_result" component={Search_result} />
-                <Stack.Screen name="CourseInfo" component={CourseInfo} />
+                <Stack.Screen name="CourseLearning" component={CourseLearning} />
                 <Stack.Screen name="UserProfile" component={UserProfile} options={{ animationEnabled: false }}/>
                 <Stack.Screen name="MyCourses" component={MyCourses} options={{ animationEnabled: false }}/>
                 <Stack.Screen name="TeacherProfile" component={TeacherProfile} />
