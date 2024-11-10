@@ -53,7 +53,8 @@ const data_category = [
 
 const Search_page = () => {
     return (
-        <ScrollView>
+        <View style={styles.container}>
+            <ScrollView>
             <View style={styles.container}>
                 {/* search input section */}
                 <View style={styles.search_section}>
@@ -104,17 +105,22 @@ const Search_page = () => {
 
                 {/* Recommen course */}
                 <Recommen_course style={{ padding: 0 }} />
+            </View>
+            </ScrollView>
 
-                {/* Footer */}
+            {/* Footer cố định */}
+            <View style={styles.footerContainer}>
                 <Footer />
             </View>
-        </ScrollView>
+        </View>
+
+        
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        // backgroundColor: 'white',
     },
     search_section: {
         padding: 16,
@@ -186,6 +192,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 8,
     },
+    footerContainer: {
+        position: 'absolute',
+        bottom: 0,
+    }
 });
 
 export default Search_page;

@@ -11,15 +11,16 @@ import Popular_course from './screens/Home/Popular_course';
 import Search from './screens/Search/Search_page';
 import Search_result from './screens/Search/Search_result';
 
-import UserProfile from './screens/UserProfile';
-import MyCourses from './screens/MyCourses';
-import TeacherProfile from './screens/teacherProfile';
-import CourseDetails_OverView from './screens/CourseDetails_OverView';
-import CourseDetails_Review from './screens/CourseDetails_Review';
-import CourseDetails_Lession from './screens/CourseDetails_Lession';
+import UserProfile from './screens/UserProfile/UserProfile';
+import MyCourses from './screens/MyCourse/MyCourses';
+import TeacherProfile from './screens/TeacherProfile/teacherProfile';
+import CourseDetails_OverView from './screens/CourseDetail/CourseDetails_OverView';
+import CourseDetails_Review from './screens/CourseDetail/CourseDetails_Review';
+import CourseDetails_Lession from './screens/CourseDetail/CourseDetails_Lession';
 import Login from './screens/Login_Logout/Login';
 import Signup from './screens/Login_Logout/Signup';
 import ForgotPassword from './screens/Login_Logout/ForgotPassword';
+
 import { LogBox } from 'react-native';
 
 export default function App() {
