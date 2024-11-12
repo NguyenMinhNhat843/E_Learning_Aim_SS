@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
@@ -6,20 +5,44 @@ import Footer from '../Home/Footer';
 
 const coursesData = [
     {
-        id: '1', title: 'Product Design', author: 'Dennis Sweeney', price: '$190', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/ProductDesign.jpg')
+        id: '1',
+        title: 'Product Design',
+        author: 'Dennis Sweeney',
+        price: '$190',
+        rating: '4.5',
+        lessons: '12 lessons',
+        image: require('../../assets/image/userProfile_img/ProductDesign.jpg'),
     },
     {
-        id: '2', title: 'Website Design', author: 'Ramono Wultschner', price: '$59', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/WebsiteDesign.jpg')
+        id: '2',
+        title: 'Website Design',
+        author: 'Ramono Wultschner',
+        price: '$59',
+        rating: '4.5',
+        lessons: '12 lessons',
+        image: require('../../assets/image/userProfile_img/WebsiteDesign.jpg'),
     },
     {
-        id: '3', title: 'Mobile UI Design', author: 'Ramono Wultschner', price: '$320', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/MobileUI_Design.jpg')
+        id: '3',
+        title: 'Mobile UI Design',
+        author: 'Ramono Wultschner',
+        price: '$320',
+        rating: '4.5',
+        lessons: '12 lessons',
+        image: require('../../assets/image/userProfile_img/MobileUI_Design.jpg'),
     },
     {
-        id: '4', title: 'Digital Portrait', author: 'Ramono Wultschner', price: '$67', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/digital_Portrait.jpg')
-    }
+        id: '4',
+        title: 'Digital Portrait',
+        author: 'Ramono Wultschner',
+        price: '$67',
+        rating: '4.5',
+        lessons: '12 lessons',
+        image: require('../../assets/image/userProfile_img/digital_Portrait.jpg'),
+    },
 ];
 
-const UserProfile = ({navigation}) => {
+const UserProfile = ({ navigation }) => {
     const [displayedCourses, setDisplayedCourses] = useState(coursesData.slice(0, 1000));
 
     const loadMoreCourses = () => {
@@ -27,14 +50,16 @@ const UserProfile = ({navigation}) => {
     };
 
     const renderCourseItem = ({ item }) => (
-        <TouchableOpacity style={styles.courseItem} onPress={() => navigation.navigate("CourseDetails_OverView")}>
+        <TouchableOpacity style={styles.courseItem} onPress={() => navigation.navigate('CourseDetails_OverView')}>
             <Image source={item.image} style={styles.courseImage} />
             <View style={styles.courseInfo}>
                 <Text style={styles.courseTitle}>{item.title}</Text>
                 <Text style={styles.courseAuthor}>{item.author}</Text>
                 <Text style={styles.coursePrice}>{item.price}</Text>
                 <View style={styles.courseMeta}>
-                    <Text style={styles.courseRating}>⭐ {item.rating} ({item.lessons})</Text>
+                    <Text style={styles.courseRating}>
+                        ⭐ {item.rating} ({item.lessons})
+                    </Text>
                 </View>
             </View>
             <FontAwesome name="bookmark-o" size={24} color="gray" />
@@ -45,14 +70,8 @@ const UserProfile = ({navigation}) => {
         <View style={styles.container}>
             {/* User Profile Header */}
             <View style={styles.profileHeader}>
-                <Image
-                    source={require('../../assets/image/userProfile_img/background_profile.png')}
-                    style={styles.backgroundImage}
-                />
-                <Image
-                    source={require('../../assets/image/userProfile_img/Face_profile.jpg')}
-                    style={styles.profileImage}
-                />
+                <Image source={require('../../assets/image/userProfile_img/background_profile.png')} style={styles.backgroundImage} />
+                <Image source={require('../../assets/image/userProfile_img/Face_profile.jpg')} style={styles.profileImage} />
                 <Text style={styles.profileName}>Mai Chiến Nô</Text>
                 <Text style={styles.profileRole}>UX/UI Designer</Text>
 
@@ -75,25 +94,26 @@ const UserProfile = ({navigation}) => {
             {/* Saved Courses List */}
             <Text style={styles.savedCoursesTitle}>Saved courses</Text>
 
-            <FlatList
-                data={displayedCourses}
-                renderItem={renderCourseItem}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.courseList}
-            />
+            <View style={{ flex: 1 }}>
+                <FlatList
+                    data={displayedCourses}
+                    renderItem={renderCourseItem}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.courseList}
+                />
+            </View>
 
             {/* Footer cố định */}
-            <View style={styles.footerContainer}>
-                <Footer />
-            </View>
+            <Footer />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#fff',
+        justifyContent: 'space-between',
+        height: '100vh',
     },
     profileHeader: {
         alignItems: 'center',
@@ -111,13 +131,13 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         marginBottom: 10,
         position: 'absolute',
-        top: 115
+        top: 115,
     },
     profileName: {
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 5,
-        marginTop: 65
+        marginTop: 65,
     },
     profileRole: {
         fontSize: 14,
@@ -190,7 +210,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
     },
-    courseList:{
+    courseList: {
         paddingBottom: 80,
         paddingHorizontal: 16,
     },

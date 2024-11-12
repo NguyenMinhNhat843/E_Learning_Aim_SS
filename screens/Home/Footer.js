@@ -42,7 +42,7 @@ const Footer = () => {
     useFocusEffect(
         React.useCallback(() => {
             const currentRoute = navigation.getState().routes[navigation.getState().index].name;
-            console.log("Current Route: ", currentRoute); // Debug
+            console.log('Current Route: ', currentRoute); // Debug
             setPageSelected(currentRoute); // Cập nhật màu sắc dựa trên trang hiện tại
         }, [navigation])
     );
@@ -51,13 +51,7 @@ const Footer = () => {
         <View style={styles.container}>
             <FlatList
                 data={data}
-                renderItem={({ item }) => (
-                    <Render_item
-                        item={item}
-                        pageSelected={pageSelected}
-                        handlePageSelected={handlePageSelected}
-                    />
-                )}
+                renderItem={({ item }) => <Render_item item={item} pageSelected={pageSelected} handlePageSelected={handlePageSelected} />}
                 keyExtractor={(item) => item.id.toString()}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
@@ -69,7 +63,6 @@ const Footer = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

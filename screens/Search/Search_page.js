@@ -1,10 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
+import React, { Fragment, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFilter, faMagnifyingGlass, faBusinessTime, faPenNib, faCode, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { FlatList } from 'react-native-web';
 import Recommen_course from '../Home/Recomment_course';
 import Footer from '../Home/Footer';
+import Data_All_Course from '../../data/Data_All_Course';
+import Search_result from './Search_result';
 
 const data_hot_topics = [
     {
@@ -31,6 +32,10 @@ const data_hot_topics = [
         id: 6,
         title: 'React',
     },
+    {
+        id: 7,
+        title: 'test',
+    },
 ];
 
 const data_category = [
@@ -52,69 +57,133 @@ const data_category = [
 ];
 
 const Search_page = () => {
+    const [searchText, setSearchText] = useState(''); // text search
+    const [data_SearchResult, setData_SearchResult] = useState([]); // data search result
+    const [searchResultView, setSearchResultView] = useState(false); // true: view search result, false: view home page
+    const [searchTopics, setSearchTopics] = useState([]); // topics search
+
+    // hàm tìm theo text
+    const searchByText = () => {
+        if (searchText.trim() === '' && searchTopics.length === 0) {
+            // alert('Vui lòng nhập nội dung tìm kiếm.');
+            return false;
+        } else {
+            const result = Data_All_Course.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
+            setData_SearchResult(result);
+            return true;
+        }
+    };
+
+    // hàm tìm theo topics
+    const saveTopics = (topic) => {
+        if (searchTopics.includes(topic)) {
+            const newTopics = searchTopics.filter((item) => item !== topic);
+            setSearchTopics(newTopics);
+        } else {
+            const newTopics = [...searchTopics, topic];
+            setSearchTopics(newTopics);
+        }
+    };
+
+    const searchByTopics = (topic) => {
+        saveTopics(topic);
+        const result = Data_All_Course.filter((item) => item.topics.includes(topic));
+        setData_SearchResult(result);
+    };
+
+    // thay đổi sang view kết quả tìm kiếm
+    const changeView = () => {
+        if (!searchByText()) {
+        } else {
+            setSearchResultView(!searchResultView);
+        }
+    };
+
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                {/* search input section */}
-                <View style={styles.search_section}>
-                    <View style={styles.search_input}>
-                        <FontAwesomeIcon icon={faMagnifyingGlass} />
-                        <TextInput style={styles.input} placeholder="Search Course" placeholderTextColor={'#f5f5f5'} />
-                    </View>
-                    <TouchableOpacity style={styles.filter_button}>
-                        <FontAwesomeIcon icon={faFilter} />
-                        <Text style={styles.filterText}>Filter</Text>
-                    </TouchableOpacity>
+        <View style={styles.container}>
+            {/* search input section */}
+            <View style={styles.search_section}>
+                <View style={styles.search_input}>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Search Course"
+                        placeholderTextColor={'#f5f5f5'}
+                        value={searchText}
+                        onChangeText={(newText) => setSearchText(newText)}
+                    />
                 </View>
-
-                {/* Hot topic section */}
-                <View style={styles.hot_topics_section}>
-                    <Text style={styles.hot_topics_text}>Hot Topics</Text>
-                    <View style={styles.hot_topics_list}>
-                        {data_hot_topics.map((item, index) => (
-                            <View style={styles.hot_topics_item} key={index}>
-                                <Text style={styles.hot_topics_item_text}>{item.title}</Text>
-                            </View>
-                        ))}
-                    </View>
-                </View>
-
-                {/* Category section */}
-                <View style={styles.category_section}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Category</Text>
-                        <TouchableOpacity>
-                            <Text style={{ color: 'cyan' }}>View more</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ paddingTop: 16 }}>
-                        <FlatList
-                            data={data_category}
-                            renderItem={({ item }) => (
-                                <View style={styles.category_item}>
-                                    <View style={{ padding: 8 }}>{item.icon}</View>
-                                    <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
-                                    <FontAwesomeIcon icon={faAngleRight} />
-                                </View>
-                            )}
-                            keyExtractor={(item) => item.id.toString()}
-                        />
-                    </View>
-                </View>
-
-                {/* Recommen course */}
-                <Recommen_course style={{ padding: 0 }} />
-
-                {/* Footer */}
-                <Footer />
+                <TouchableOpacity style={styles.filter_button} onPress={changeView}>
+                    <FontAwesomeIcon icon={faFilter} />
+                    <Text style={styles.filterText}>Filter</Text>
+                </TouchableOpacity>
             </View>
-        </ScrollView>
+
+            {/* body */}
+            <ScrollView style={{ flex: 1 }}>
+                {searchResultView ? (
+                    <Search_result data={data_SearchResult} />
+                ) : (
+                    <Fragment>
+                        <View style={styles.hot_topics_section}>
+                            <Text style={styles.hot_topics_text}>Hot Topics</Text>
+                            <View style={styles.hot_topics_list}>
+                                {data_hot_topics.map((item, index) => (
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.hot_topics_item,
+                                            { backgroundColor: searchTopics.includes(item.title) ? 'cyan' : 'white' },
+                                        ]}
+                                        key={index}
+                                        onPress={() => searchByTopics(item.title)}
+                                    >
+                                        <Text>{item.title}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </View>
+
+                        {/* Category section */}
+                        <View style={styles.category_section}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Category</Text>
+                                <TouchableOpacity>
+                                    <Text style={{ color: 'cyan' }}>View more</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ paddingTop: 16 }}>
+                                <FlatList
+                                    data={data_category}
+                                    renderItem={({ item }) => (
+                                        <View style={styles.category_item}>
+                                            <View style={{ padding: 8 }}>{item.icon}</View>
+                                            <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
+                                            <FontAwesomeIcon icon={faAngleRight} />
+                                        </View>
+                                    )}
+                                    keyExtractor={(item) => item.id.toString()}
+                                />
+                            </View>
+                        </View>
+
+                        {/* Recommen course */}
+                        <Recommen_course style={{ padding: 0 }} />
+                    </Fragment>
+                )}
+                {/* Hot topic section */}
+            </ScrollView>
+
+            {/* Footer */}
+            <Footer />
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
+        justifyContent: 'space-between',
+        height: '100vh',
     },
     search_section: {
         padding: 16,

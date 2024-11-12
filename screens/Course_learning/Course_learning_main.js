@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronLeft, faEllipsisVertical, faShareNodes, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark, faHeart } from '@fortawesome/free-regular-svg-icons';
 
-import Course_info_QA from './Course_info_QA';
-import Course_info_project from './Course_info_project';
-import Lesson_Tab from './Course_info_lessons';
+import Course_info_QA from './Course_learning_QA';
+import Course_info_project from './Course_learning_project';
+import Lesson_Tab from './Course_learning_lessons';
 
 const Course_Info_main = () => {
     const [tabSelected, setTabSelected] = useState('LESSONS');

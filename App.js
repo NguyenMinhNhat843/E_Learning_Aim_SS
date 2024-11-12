@@ -11,12 +11,12 @@ import Popular_course from './screens/Home/Popular_course';
 import Search from './screens/Search/Search_page';
 import Search_result from './screens/Search/Search_result';
 
-import UserProfile from './screens/UserProfile';
-import MyCourses from './screens/MyCourses';
-import TeacherProfile from './screens/teacherProfile';
-import CourseDetails_OverView from './screens/CourseDetails_OverView';
-import CourseDetails_Review from './screens/CourseDetails_Review';
-import CourseDetails_Lession from './screens/CourseDetails_Lession';
+import UserProfile from './screens/UserProfile/UserProfile';
+import MyCourses from './screens/MyCourse/MyCourses';
+import TeacherProfile from './screens/TeacherProfile/teacherProfile';
+import CourseDetails_OverView from './screens/CourseDetail/CourseDetails_OverView';
+import CourseDetails_Review from './screens/CourseDetail/CourseDetails_Lession';
+import CourseDetails_Lession from './screens/CourseDetail/CourseDetails_Review';
 import Login from './screens/Login_Logout/Login';
 import Signup from './screens/Login_Logout/Signup';
 import ForgotPassword from './screens/Login_Logout/ForgotPassword';
@@ -29,7 +29,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="Home"
+                initialRouteName="Search"
                 screenOptions={{
                     headerShown: false,
                 }}
@@ -44,12 +44,12 @@ export default function App() {
                 <Stack.Screen name="Search" component={Search} />
                 <Stack.Screen name="Search_result" component={Search_result} />
                 <Stack.Screen name="CourseLearning" component={CourseLearning} />
-                <Stack.Screen name="UserProfile" component={UserProfile} options={{ animationEnabled: false }}/>
-                <Stack.Screen name="MyCourses" component={MyCourses} options={{ animationEnabled: false }}/>
+                <Stack.Screen name="UserProfile" component={UserProfile} options={{ animationEnabled: false }} />
+                <Stack.Screen name="MyCourses" component={MyCourses} options={{ animationEnabled: false }} />
                 <Stack.Screen name="TeacherProfile" component={TeacherProfile} />
-                <Stack.Screen name="CourseDetails_OverView" component={CourseDetails_OverView} options={{ animationEnabled: false }}/>
-                <Stack.Screen name="CourseDetails_Review" component={CourseDetails_Review} options={{ animationEnabled: false }}/>
-                <Stack.Screen name="CourseDetails_Lession" component={CourseDetails_Lession} options={{ animationEnabled: false }}/>
+                <Stack.Screen name="CourseDetails_OverView" component={CourseDetails_OverView} options={{ animationEnabled: false }} />
+                <Stack.Screen name="CourseDetails_Review" component={CourseDetails_Review} options={{ animationEnabled: false }} />
+                <Stack.Screen name="CourseDetails_Lession" component={CourseDetails_Lession} options={{ animationEnabled: false }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
