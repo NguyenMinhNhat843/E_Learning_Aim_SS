@@ -12,29 +12,30 @@ import Footer from './Footer';
 
 const Home = ({ navigation }) => {
     return (
-        <View style={{ justifyContent: 'space-between', height: '100vh' }}>
+        <View style={styles.container}>
             {/* header */}
             <View style={styles.header}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
-                    <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faCartShopping} />
-                    <FontAwesomeIcon style={{ color: 'white', height: '100%', width: 24 }} icon={faBell} />
-                </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
+                            <FontAwesomeIcon style={{ color: 'white', paddingRight: 46, height: '100%', width: 24 }} icon={faCartShopping} />
+                            <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faBell} />
+                        </View>
+                        <View>
+                            <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
+                        </View>
+                    </View>
+            <ScrollView style={styles.scrollContent}>
                 <View>
-                    <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
-                </View>
-            </View>
-
-            <ScrollView style={{ height: 500, paddingBottom: 32 }}>
-                {/* banner */}
-                <View style={styles.banner_block}>
-                    <Image style={styles.banner_img} source={require('../../assets/image/course_info/banner.jpg')} />
-                    <View style={styles.banner_info}>
-                        <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>PROJECT MANAGER</Text>
-                        <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>20% OFF</Text>
-                        <TouchableOpacity style={styles.button_banner}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'white' }}>Join now</Text>
-                        </TouchableOpacity>
+                    {/* banner */}
+                    <View style={styles.banner_block}>
+                        <Image style={styles.banner_img} source={require('../../assets/image/course_info/banner.jpg')} />
+                        <View style={styles.banner_info}>
+                            <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>PROJECT MANAGER</Text>
+                            <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>20% OFF</Text>
+                            <TouchableOpacity style={styles.button_banner}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'white' }}>Join now</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     {/* Category section */}
@@ -53,8 +54,11 @@ const Home = ({ navigation }) => {
                     <Top_teacher navigation={navigation} />
                 </View>
             </ScrollView>
+
             {/* Footer cố định */}
-            <Footer />
+            <View style={styles.footerContainer}>
+                <Footer/>
+            </View>
         </View>
     );
 };

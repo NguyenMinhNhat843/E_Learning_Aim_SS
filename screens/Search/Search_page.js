@@ -1,3 +1,4 @@
+
 import React, { Fragment, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -181,9 +182,9 @@ const Search_page = () => {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 56,
+        flex:1,
         backgroundColor: 'white',
-        justifyContent: 'space-between',
-        height: '100vh',
     },
     search_section: {
         padding: 16,
