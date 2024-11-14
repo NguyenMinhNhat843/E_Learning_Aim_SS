@@ -20,7 +20,7 @@ const Render_item_course = ({ item }) => {
     };
 
     return (
-        <View style={styles.course_item}>
+        <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView",{courses:item})}>
             {/* image course */}
             <Image source={item.image} style={styles.course_item_image} />
 
@@ -57,11 +57,11 @@ const Render_item_course = ({ item }) => {
                     <Text>{item.lessonsNumber} lessons</Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 
-const Search_result = ({ data }) => {
+const Search_result = ({ data,navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             {data.length === 0 ? (

@@ -42,7 +42,10 @@ const MyCourses = ({ navigation, route }) => {
             <Text style={styles.header}>My Courses</Text>
 
             <View style={styles.bannerContainer}>
-                <Image source={require('../../assets/image/myCourses_img/banner.png')} style={styles.bannerImage} />
+                <Image
+                    source={require('../../assets/image/myCourses_img/banner.png')}
+                    style={styles.bannerImage}
+                />
             </View>
 
             {/* Thanh điều hướng */}
@@ -50,20 +53,15 @@ const MyCourses = ({ navigation, route }) => {
                 <TouchableOpacity onPress={() => handleTabPress('ALL')} style={selectedTab === 'ALL' ? styles.activeTab : styles.tab}>
                     <Text style={selectedTab === 'ALL' ? styles.activeTabText : styles.tabText}>ALL</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => handleTabPress('ON GOING')}
-                    style={selectedTab === 'ON GOING' ? styles.activeTab : styles.tab}
-                >
+                <TouchableOpacity onPress={() => handleTabPress('ON GOING')} style={selectedTab === 'ON GOING' ? styles.activeTab : styles.tab}>
                     <Text style={selectedTab === 'ON GOING' ? styles.activeTabText : styles.tabText}>ON GOING</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => handleTabPress('COMPLETED')}
-                    style={selectedTab === 'COMPLETED' ? styles.activeTab : styles.tab}
-                >
+                <TouchableOpacity onPress={() => handleTabPress('COMPLETED')} style={selectedTab === 'COMPLETED' ? styles.activeTab : styles.tab}>
                     <Text style={selectedTab === 'COMPLETED' ? styles.activeTabText : styles.tabText}>COMPLETED</Text>
                 </TouchableOpacity>
             </View>
 
+            {/* Danh sách khóa học đã lọc */}
             <FlatList
                 data={filterCourses()}
                 keyExtractor={(item) => item.courseID.toString()}
@@ -73,17 +71,18 @@ const MyCourses = ({ navigation, route }) => {
             />
 
             {/* Footer cố định */}
-            <Footer />
+            <View style={styles.footerContainer}>
+                <Footer />
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         paddingTop: 40,
         backgroundColor: '#fff',
-        justifyContent: 'space-between',
-        height: '100vh',
     },
     header: {
         fontSize: 24,
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
     footerContainer: {
         position: 'absolute',
         bottom: 0,
-    },
+    }
 });
 
 export default MyCourses;

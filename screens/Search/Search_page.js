@@ -57,7 +57,7 @@ const data_category = [
     },
 ];
 
-const Search_page = () => {
+const Search_page = ({navigation}) => {
     const [searchText, setSearchText] = useState(''); // text search
     const [data_SearchResult, setData_SearchResult] = useState([]); // data search result
     const [searchResultView, setSearchResultView] = useState(false); // true: view search result, false: view home page
@@ -168,7 +168,7 @@ const Search_page = () => {
                         </View>
 
                         {/* Recommen course */}
-                        <Recommen_course style={{ padding: 0 }} />
+                        <Recommen_course style={{ padding: 0 }} navigation={navigation} />
                     </Fragment>
                 )}
                 {/* Hot topic section */}

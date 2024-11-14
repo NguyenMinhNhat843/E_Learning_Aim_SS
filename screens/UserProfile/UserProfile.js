@@ -121,16 +121,17 @@ const UserProfile = ({ navigation }) => {
             />
 
             {/* Footer cố định */}
-            <Footer />
+            <View style={styles.footerContainer}>
+                <Footer />
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: '#fff',
-        justifyContent: 'space-between',
-        height: '100vh',
     },
     profileHeader: {
         alignItems: 'center',
@@ -148,13 +149,13 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         marginBottom: 10,
         position: 'absolute',
-        top: 115,
+        top: 115
     },
     profileName: {
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 5,
-        marginTop: 65,
+        marginTop: 65
     },
     profileRole: {
         fontSize: 14,
