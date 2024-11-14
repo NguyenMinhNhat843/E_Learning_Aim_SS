@@ -1,48 +1,81 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import Footer from '../Home/Footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { database } from '../../firebaseConfig';
+import { ref, get } from 'firebase/database';
+import { useUser } from '../Login_Logout/UserContext';
 
-const coursesData = [
-    {
-        id: '1', title: 'Product Design', author: 'Dennis Sweeney', price: '$190', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/ProductDesign.jpg')
-    },
-    {
-        id: '2', title: 'Website Design', author: 'Ramono Wultschner', price: '$59', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/WebsiteDesign.jpg')
-    },
-    {
-        id: '3', title: 'Mobile UI Design', author: 'Ramono Wultschner', price: '$320', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/MobileUI_Design.jpg')
-    },
-    {
-        id: '4', title: 'Digital Portrait', author: 'Ramono Wultschner', price: '$67', rating: '4.5', lessons: '12 lessons', image: require('../../assets/image/userProfile_img/digital_Portrait.jpg')
-    }
-];
+const UserProfile = ({ navigation }) => {
+    const { user } = useUser(); // Lấy thông tin người dùng từ context
 
-const UserProfile = ({navigation}) => {
-    const [displayedCourses, setDisplayedCourses] = useState(coursesData.slice(0, 1000));
-
-    const loadMoreCourses = () => {
-        setDisplayedCourses(coursesData);
+    // Hàm xử lý đăng xuất
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem('userToken'); // Xóa token đăng nhập
+            Alert.alert('Logged out', 'You have been logged out successfully!', [
+                {
+                    text: 'OK',
+                    onPress: () => navigation.replace('Login'), // Chuyển hướng về màn hình Login
+                },
+            ]);
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
     };
 
+
+    const [courses, setCourses] = useState([]); // Danh sách khóa học chi tiết
+
+    // Hàm fetch chi tiết các khóa học từ Firebase
+    const fetchCourses = async (courseLearning) => {
+        try {
+            const coursePromises = courseLearning.map(async (course) => {
+                const courseRef = ref(database, `Courses/${course.courseID}`); // Đường dẫn tới course ID
+                const snapshot = await get(courseRef);
+
+                if (snapshot.exists()) {
+                    return {
+                        id: snapshot.key, // Sử dụng `key` của Firebase làm id
+                        ...snapshot.val(), // Lấy toàn bộ thuộc tính của khóa học
+                    };
+                }
+                return null; // Trường hợp khóa học không tồn tại
+            });
+
+            const fetchedCourses = await Promise.all(coursePromises);
+            setCourses(fetchedCourses.filter((course) => course !== null)); // Loại bỏ giá trị null
+        } catch (error) {
+            console.error('Lỗi khi fetch dữ liệu khóa học:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (user.course_learning) {
+            fetchCourses(user.course_learning);
+        }
+    }, [user]);
+
     const renderCourseItem = ({ item }) => (
-        <TouchableOpacity style={styles.courseItem} onPress={() => navigation.navigate("CourseDetails_OverView")}>
-            <Image source={item.image} style={styles.courseImage} />
+        <View style={styles.courseItem} onPress={() => navigation.navigate("CourseDetails_OverView")}>
+            <Image source={{ uri: item.image.url }} style={styles.courseImage} />
             <View style={styles.courseInfo}>
-                <Text style={styles.courseTitle}>{item.title}</Text>
-                <Text style={styles.courseAuthor}>{item.author}</Text>
-                <Text style={styles.coursePrice}>{item.price}</Text>
+                <Text style={styles.courseTitle}>{item.name}</Text>
+                <Text style={styles.courseAuthor}>{item.teacherName}</Text>
+                <Text style={styles.coursePrice}>$ {item.price}</Text>
                 <View style={styles.courseMeta}>
-                    <Text style={styles.courseRating}>⭐ {item.rating} ({item.lessons})</Text>
+                    <Text style={styles.courseRating}>⭐ {item.rank} ({item.lessons} lessons)</Text>
                 </View>
             </View>
             <FontAwesome name="bookmark-o" size={24} color="gray" />
-        </TouchableOpacity>
+        </View>
     );
 
     return (
         <View style={styles.container}>
+
             {/* User Profile Header */}
             <View style={styles.profileHeader}>
                 <Image
@@ -50,19 +83,24 @@ const UserProfile = ({navigation}) => {
                     style={styles.backgroundImage}
                 />
                 <Image
-                    source={require('../../assets/image/userProfile_img/Face_profile.jpg')}
+                    source={{ uri: user.image.url }}
                     style={styles.profileImage}
                 />
-                <Text style={styles.profileName}>Mai Chiến Nô</Text>
-                <Text style={styles.profileRole}>UX/UI Designer</Text>
+                <Text style={styles.profileName}>{user.name}</Text>
+                <Text style={styles.profileRole}>{user.technique}</Text>
+
+                {/* Thêm nút Logout */}
+                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                    <Text style={styles.logoutText}>Logout</Text>
+                </TouchableOpacity>
 
                 <View style={styles.profileStats}>
                     <View style={styles.statItem}>
-                        <Text style={styles.statNumber}>4</Text>
+                        <Text style={styles.statNumber}>5</Text>
                         <Text style={styles.statLabel}>Save</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statNumber}>2</Text>
+                        <Text style={styles.statNumber}>3</Text>
                         <Text style={styles.statLabel}>On Going</Text>
                     </View>
                     <View style={styles.statItem}>
@@ -76,7 +114,7 @@ const UserProfile = ({navigation}) => {
             <Text style={styles.savedCoursesTitle}>Saved courses</Text>
 
             <FlatList
-                data={displayedCourses}
+                data={courses}
                 renderItem={renderCourseItem}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.courseList}
@@ -122,7 +160,7 @@ const styles = StyleSheet.create({
     profileRole: {
         fontSize: 14,
         color: 'gray',
-        marginBottom: 20,
+        marginBottom: 5,
     },
     profileStats: {
         flexDirection: 'row',
@@ -147,6 +185,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         paddingHorizontal: 16,
+        marginTop: 20,
     },
     courseItem: {
         flexDirection: 'row',
@@ -190,9 +229,22 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
     },
-    courseList:{
+    courseList: {
         paddingBottom: 80,
         paddingHorizontal: 16,
+    },
+
+    logoutButton: {
+        backgroundColor: '#FF5733',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        marginBottom: 10,
+    },
+    logoutText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, TextInput, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFilter, faMagnifyingGlass, faBusinessTime, faPenNib, faCode, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { FlatList } from 'react-native-web';
+// import { FlatList } from 'react-native-web';
 import Recommen_course from '../Home/Recomment_course';
 import Footer from '../Home/Footer';
 
@@ -54,8 +54,8 @@ const data_category = [
 const Search_page = () => {
     return (
         <View style={styles.container}>
-            <ScrollView>
-            <View style={styles.container}>
+            <ScrollView >
+            {/* <View style={styles.container}> */}
                 {/* search input section */}
                 <View style={styles.search_section}>
                     <View style={styles.search_input}>
@@ -105,7 +105,7 @@ const Search_page = () => {
 
                 {/* Recommen course */}
                 <Recommen_course style={{ padding: 0 }} />
-            </View>
+            {/* </View> */}
             </ScrollView>
 
             {/* Footer cố định */}
@@ -120,7 +120,9 @@ const Search_page = () => {
 
 const styles = StyleSheet.create({
     container: {
-        // backgroundColor: 'white',
+        marginTop: 56,
+        flex:1,
+        backgroundColor: 'white',
     },
     search_section: {
         padding: 16,

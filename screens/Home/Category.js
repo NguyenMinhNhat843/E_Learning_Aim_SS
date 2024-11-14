@@ -19,7 +19,7 @@ const Category = () => {
             <View style={styles.category_header}>
                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Categories</Text>
                 <TouchableOpacity>
-                    <Text style={{ color: 'cyan' }}>View more</Text>
+                    <Text style={{ color: '#007BFF' }}>View more</Text>
                 </TouchableOpacity>
             </View>
             {/* Hiển thị danh mục dưới dạng lưới */}

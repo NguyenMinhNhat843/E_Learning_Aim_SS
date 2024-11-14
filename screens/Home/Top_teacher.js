@@ -1,60 +1,53 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, ActivityIndicator } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark as solidBookMark } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
+import { ref, get } from 'firebase/database';
+import { database } from '../../firebaseConfig';  // Import cấu hình Firebase 
 
-const data_course = [
-    {
-        id: 1,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        level: 'University',
-        rating: 4.5,
-        ratingNumber: 100,
-    },
-    {
-        id: 2,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        level: 'University',
-        rating: 4.5,
-        ratingNumber: 100,
-    },
-    {
-        id: 3,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        level: 'University',
-        rating: 4.5,
-        ratingNumber: 100,
-    },
-    {
-        id: 4,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        level: 'University',
-        rating: 4.5,
-        ratingNumber: 100,
-    },
-];
+const Top_teacher = ({ navigation }) => {
+    const [teacher, setTeacher] = useState(null);
 
-const Top_teacher = ({navigation}) => {
+    // Hàm lấy dữ liệu từ Firebase
+    const fetchTeacher = async () => {
+        const teacherRef = ref(database, 'teacher');
+        try {
+            const snapshot = await get(teacherRef);
+            if (snapshot.exists()) {
+                const teacherData = Object.keys(snapshot.val()).map(key => ({
+                    id: key, // Lấy key làm id
+                    ...snapshot.val()[key], // Thêm dữ liệu từ nút con
+                }));
+                console.log("Dữ liệu giáo viên từ Firebase:", teacherData);
+                setTeacher(teacherData);  // Lưu dữ liệu vào state
+            } else {
+                console.log('Không có dữ liệu');
+            }
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu giáo viên:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTeacher();  // Gọi hàm fetch khi component mount
+    }, []);
+
     const Render_item_teacher = ({ item }) => {
         const [isStar, setIsStar] = React.useState(false);
         const handleStar = () => {
             setIsStar(!isStar);
         };
-    
+
         return (
-            <TouchableOpacity style={styles.teacher_item} onPress={() => navigation.navigate('TeacherProfile')}>
-                <Image source={item.image} style={styles.teacher_item_image} />
+            <TouchableOpacity style={styles.teacher_item} onPress={() => navigation.navigate('TeacherProfile',{teacher:item})}>
+                <Image source={{ uri: item.image.url }} style={styles.teacher_item_image} />
                 <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
                     <View>
                         <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
-                        <Text style={{ color: '#333' }}>{item.level}</Text>
+                        <Text style={{ color: '#333' }}>{item.education}</Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -66,7 +59,7 @@ const Top_teacher = ({navigation}) => {
                         )}
                     </TouchableOpacity>
                     <Text style={{ paddingRight: 16 }}>
-                        {item.rating} ({item.ratingNumber})
+                        {item.rank} ({item.countReview})
                     </Text>
                 </View>
             </TouchableOpacity>
@@ -78,13 +71,13 @@ const Top_teacher = ({navigation}) => {
             <View style={styles.popular_course_header}>
                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Top teacher</Text>
                 <TouchableOpacity>
-                    <Text style={{ color: 'cyan' }}>View more</Text>
+                    <Text style={{ color: '#007BFF' }}>View more</Text>
                 </TouchableOpacity>
             </View>
             {/* lisst popular course section */}
             <View>
                 <FlatList
-                    data={data_course}
+                    data={teacher}
                     renderItem={({ item }) => <Render_item_teacher item={item} />}
                     keyExtractor={(item) => item.id}
                     horizontal={true}
@@ -112,11 +105,13 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 8,
         marginRight: 16,
+        backgroundColor: '#effaff',
     },
     teacher_item_image: {
-        height: 100,
-        width: 200,
-        borderRadius: 8,
+        height: 120,
+        width: 120,
+        // borderRadius: 8,
+        
     },
 });
 

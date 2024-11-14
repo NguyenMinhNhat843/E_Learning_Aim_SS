@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,TextInput } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEnvelope, faMobile, faUserPlus, faLock } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation } from '@react-navigation/native';
-import { TextInput } from 'react-native-web';
 
 const Signup = () => {
     const navigation = useNavigation();
@@ -43,12 +42,20 @@ const Signup = () => {
                     <FontAwesomeIcon style={styles.icon} icon={faUserPlus} />
                     <TextInput style={styles.input_control} placeholder="Full name" />
                 </View>
+
+                
                 <View style={styles.group}>
                     <FontAwesomeIcon style={styles.icon} icon={faMobile} />
-                    <TextInput style={styles.input_control} placeholder="Mobile" />
+                    <TextInput style={styles.input_control} placeholder="Technique" />
+                </View>
+
+                <View></View>
+                <View style={styles.group}>
+                    <FontAwesomeIcon style={styles.icon} icon={faMobile} />
+                    <TextInput style={styles.input_control} placeholder="User Name" />
                 </View>
                 <View style={styles.group}>
-                    <FontAwesomeIcon icon={faLock} />
+                    <FontAwesomeIcon style={styles.icon} icon={faLock} />
                     <TextInput style={styles.input_control} placeholder="Password" />
                 </View>
             </View>
@@ -71,6 +78,7 @@ const Signup = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
+        marginTop: 36,
     },
     type_account: {
         flexDirection: 'row',
@@ -107,6 +115,7 @@ const styles = StyleSheet.create({
         height: '100%',
         outline: 'none',
         padding: 16,
+        color: 'black',
     },
     login_button: {
         backgroundColor: 'blue',

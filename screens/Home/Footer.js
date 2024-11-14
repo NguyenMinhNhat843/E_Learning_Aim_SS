@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHouse, faMagnifyingGlass, faBookOpen, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
+// Danh sách các trang trong footer
 const data = [
     { id: 1, icon: faHouse, name: 'Home' },
     { id: 2, icon: faMagnifyingGlass, name: 'Search' },
@@ -11,9 +12,10 @@ const data = [
     { id: 4, icon: faUser, name: 'Profile' },
 ];
 
-const Render_item = ({ item, pageSelected, handlePageSelected }) => {
+// Component hiển thị từng mục trong Footer
+const RenderItem = ({ item, pageSelected, handlePageSelected }) => {
     const page = item.name.toUpperCase();
-    const color = pageSelected === page ? 'cyan' : 'black'; // Đặt màu theo điều kiện
+    const color = pageSelected === page ? 'cyan' : 'black'; // Đổi màu khi được chọn
 
     return (
         <TouchableOpacity style={styles.item} onPress={() => handlePageSelected(page)}>
@@ -23,27 +25,28 @@ const Render_item = ({ item, pageSelected, handlePageSelected }) => {
     );
 };
 
-const Footer = () => {
+// Component Footer
+const Footer = ({ user }) => {
     const navigation = useNavigation();
     const [pageSelected, setPageSelected] = React.useState('HOME');
 
     const handlePageSelected = (page) => {
-        setPageSelected(page); // Cập nhật màu ngay lập tức
+        setPageSelected(page); // Cập nhật trạng thái trang được chọn
 
         let targetPage = page;
         if (page === 'HOME') targetPage = 'Home';
         else if (page === 'SEARCH') targetPage = 'Search';
-        else if (page === 'MY COURSE') targetPage = 'MyCourses';
-        else if (page === 'PROFILE') targetPage = 'UserProfile';
-
-        navigation.navigate(targetPage); // Chuyển đến trang
+        else if (page === 'MY COURSE') targetPage = 'My Course';
+        else if (page === 'PROFILE') targetPage = 'Profile';
+        
+        navigation.navigate(targetPage); // Điều hướng đến các trang khác
     };
 
+    // Theo dõi và cập nhật trang được chọn khi điều hướng
     useFocusEffect(
         React.useCallback(() => {
             const currentRoute = navigation.getState().routes[navigation.getState().index].name;
-            console.log("Current Route: ", currentRoute); // Debug
-            setPageSelected(currentRoute); // Cập nhật màu sắc dựa trên trang hiện tại
+            setPageSelected(currentRoute.toUpperCase()); // Cập nhật màu sắc dựa trên trang hiện tại
         }, [navigation])
     );
 
@@ -52,7 +55,7 @@ const Footer = () => {
             <FlatList
                 data={data}
                 renderItem={({ item }) => (
-                    <Render_item
+                    <RenderItem
                         item={item}
                         pageSelected={pageSelected}
                         handlePageSelected={handlePageSelected}
@@ -67,6 +70,7 @@ const Footer = () => {
     );
 };
 
+// Style cho Footer
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -92,6 +96,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 8,
+    },
+    userText: {
+        fontSize: 14,
+        color: 'gray',
+        marginHorizontal: 10,
     },
 });
 
