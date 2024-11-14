@@ -10,7 +10,7 @@ import Course_inspires from './Course_inspires';
 import Top_teacher from './Top_teacher';
 import Footer from './Footer';
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
     return (
         <View style={{ justifyContent: 'space-between', height: '100vh' }}>
             {/* header */}
@@ -41,22 +41,20 @@ const Home = ({navigation}) => {
                     <Category />
 
                     {/* popular course */}
-                    <Popular_course navigation={navigation}/>
+                    <Popular_course navigation={navigation} />
 
                     {/* recommen course */}
-                    <Recomment_course navigation={navigation}/>
+                    <Recomment_course navigation={navigation} />
 
                     {/* course inspires */}
-                    <Course_inspires navigation={navigation}/>
+                    <Course_inspires navigation={navigation} />
 
                     {/* top teacher */}
-                    <Top_teacher navigation={navigation}/>
+                    <Top_teacher navigation={navigation} />
                 </View>
             </ScrollView>
             {/* Footer cố định */}
-            <View style={styles.footerContainer}>
-                <Footer />
-            </View>
+            <Footer />
         </View>
     );
 };
@@ -71,7 +69,6 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         paddingHorizontal: 16,
         paddingBottom: 16,
-        
     },
     // banner
     banner_block: {
@@ -113,7 +110,7 @@ const styles = StyleSheet.create({
     footerContainer: {
         position: 'absolute',
         bottom: 0,
-    }
+    },
 });
 
 export default Home;
