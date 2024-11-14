@@ -219,9 +219,9 @@ const styles = StyleSheet.create({
         width: '20%',
     },
     avatar: {
-        height: '100%',
-        width: '100%',
-        borderRadius: '50%',
+        height: 80,
+        width: 80,
+        borderRadius: 50,
     },
     user_name: {
         paddingLeft: 16,
