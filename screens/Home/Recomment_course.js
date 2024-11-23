@@ -1,117 +1,101 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark as solidBookMark } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
-
-const data_course = [
-    {
-        id: 1,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        author: 'John Doe',
-        price: 20,
-        rating: 4.5,
-        ratingNumber: 100,
-        lessonsNumber: 10,
-        isBookMark: false,
-    },
-    {
-        id: 2,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        author: 'John Doe',
-        price: 20,
-        rating: 4.5,
-        ratingNumber: 100,
-        lessonsNumber: 10,
-        isBookMark: false,
-    },
-    {
-        id: 3,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        author: 'John Doe',
-        price: 20,
-        rating: 4.5,
-        ratingNumber: 100,
-        lessonsNumber: 10,
-        isBookMark: false,
-    },
-    {
-        id: 4,
-        image: require('../../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        author: 'John Doe',
-        price: 20,
-        rating: 4.5,
-        ratingNumber: 100,
-        lessonsNumber: 10,
-        isBookMark: false,
-    },
-];
+import { ref, get } from 'firebase/database';
+import { database } from '../../firebaseConfig';  // Import cấu hình Firebase 
 
 
-const Recommen_course = ({navigation}) => {
+const Recommen_course = ({ navigation }) => {
+    const [courses, setCourses] = useState(null);
+
+    // Hàm lấy dữ liệu từ Firebase
+    const fetchCourses = async () => {
+        const coursesRef = ref(database, 'Courses');
+        try {
+            const snapshot = await get(coursesRef);
+            if (snapshot.exists()) {
+                const coursesData = Object.keys(snapshot.val()).map(key => ({
+                    id: key, // Lấy key làm id
+                    ...snapshot.val()[key], // Thêm dữ liệu từ nút con
+                }));
+                console.log("Dữ liệu khóa học từ Firebase:", coursesData);
+                setCourses(coursesData);  // Lưu dữ liệu vào state
+            } else {
+                console.log('Không có dữ liệu');
+            }
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu Khóa học:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCourses();  // Gọi hàm fetch khi component mount
+    }, []);
+
+
     const Render_item_course = ({ item }) => {
-        const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
-        const handleBookMark = () => {
-            setIsBookMark(!isBookMark);
-        };
-    
-        const [isStar, setIsStar] = React.useState(false);
-        const handleStar = () => {
-            setIsStar(!isStar);
-        };
-    
-        return (
-            <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView")}>
-                <Image source={item.image} style={styles.course_item_image} />
-                <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
-                    <View>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
-                        <Text style={{ color: '#333' }}>{item.author}</Text>
-                        <Text style={{ color: 'cyan', fontWeight: 'bold' }}>${item.price}</Text>
+        if (item.status === "Recommend") {
+            const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
+            const handleBookMark = () => {
+                setIsBookMark(!isBookMark);
+            };
+
+            const [isStar, setIsStar] = React.useState(false);
+            const handleStar = () => {
+                setIsStar(!isStar);
+            };
+
+            return (
+                <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView",{courses:item})}>
+                    <Image source={{uri:item.image.url}} style={styles.course_item_image} />
+                    <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
+                        <View>
+                            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
+                            <Text style={{ color: '#333' }}>{item.teacherName}</Text>
+                            <Text style={{ color: '#007BFF', fontWeight: 'bold' }}>${item.price}</Text>
+                        </View>
+                        <TouchableOpacity onPress={handleBookMark}>
+                            {isBookMark ? (
+                                <FontAwesomeIcon style={{ paddingTop: 8 }} icon={solidBookMark} />
+                            ) : (
+                                <FontAwesomeIcon style={{ paddingTop: 8 }} icon={faBookmark} />
+                            )}
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={handleBookMark}>
-                        {isBookMark ? (
-                            <FontAwesomeIcon style={{ paddingTop: 8 }} icon={solidBookMark} />
-                        ) : (
-                            <FontAwesomeIcon style={{ paddingTop: 8 }} icon={faBookmark} />
-                        )}
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={handleStar}>
-                        {isStar ? (
-                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
-                        ) : (
-                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
-                        )}
-                    </TouchableOpacity>
-                    <Text style={{ paddingRight: 16 }}>
-                        {item.rating} ({item.ratingNumber})
-                    </Text>
-                    <Text>{item.lessonsNumber} lessons</Text>
-                </View>
-            </TouchableOpacity>
-        );
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={handleStar}>
+                            {isStar ? (
+                                <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
+                            ) : (
+                                <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
+                            )}
+                        </TouchableOpacity>
+                        <Text style={{ paddingRight: 16 }}>
+                            {item.rank} ({item.countLean})
+                        </Text>
+                        <Text>{item.lessons} lessons</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.popular_course_header}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Recommen for you</Text>
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Recommend for you</Text>
                 <TouchableOpacity>
-                    <Text style={{ color: 'cyan' }}>View more</Text>
+                    <Text style={{ color: '#007BFF', }}>View more</Text>
                 </TouchableOpacity>
             </View>
             {/* lisst popular course section */}
             <View>
                 <FlatList
-                    data={data_course}
+                    data={courses}
                     renderItem={({ item }) => <Render_item_course item={item} />}
                     keyExtractor={(item) => item.id}
                     horizontal={true}

@@ -56,7 +56,7 @@ const data_category = [
     },
 ];
 
-const Search_page = () => {
+const Search_page = ({ navigation }) => {
     const [searchText, setSearchText] = useState(''); // text search
     const [data_SearchResult, setData_SearchResult] = useState([]); // data search result
     const [searchResultView, setSearchResultView] = useState(false); // true: view search result, false: view home page
@@ -171,7 +171,7 @@ const Search_page = () => {
                         </View>
 
                         {/* Recommen course */}
-                        <Recommen_course style={{ padding: 0 }} />
+                        <Recommen_course style={{ padding: 0 }} navigation={navigation} />
                     </Fragment>
                 )}
                 {/* Hot topic section */}
@@ -185,9 +185,9 @@ const Search_page = () => {
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 56,
+        flex: 1,
         backgroundColor: 'white',
-        justifyContent: 'space-between',
-        height: '100vh',
     },
     search_section: {
         padding: 16,
@@ -258,6 +258,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 8,
+    },
+    footerContainer: {
+        position: 'absolute',
+        bottom: 0,
     },
 });
 

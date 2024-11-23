@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUpload, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { FlatList } from 'react-native-web';
 
 // render item project
 const data_project = [
@@ -33,6 +32,7 @@ const data_project = [
     },
 ];
 
+// Render item project
 const Render_item_project = ({ item }) => {
     return (
         <View style={styles.project_item}>
@@ -94,8 +94,9 @@ const ReadMoreText = ({ text, maxLength }) => {
     );
 };
 
-const course_info_project = () => {
-    const project_dexription_full_text =
+// Đổi tên component thành PascalCase
+const CourseInfoProject = () => {
+    const project_description_full_text =
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quo ad praesentium quod omnis nam nisi ducimus aliquam totam quas accusamus eveniet reprehenderit, iste commodi sequi doloremque dolorum pariatur. Accusantium.';
 
     return (
@@ -115,18 +116,16 @@ const course_info_project = () => {
                     </TouchableOpacity>
                 </View>
                 {/* student project section */}
-                <View>
-                    <FlatList
-                        data={data_project}
-                        renderItem={({ item }) => <Render_item_project item={item} />}
-                        keyExtractor={(item) => item.id}
-                        horizontal={true}
-                    />
-                </View>
+                <FlatList
+                    data={data_project}
+                    renderItem={({ item }) => <Render_item_project item={item} />}
+                    keyExtractor={(item) => item.id.toString()} // Convert to string
+                    horizontal={true}
+                />
                 {/* Project description section */}
                 <View style={{ paddingTop: 32 }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 24, paddingBottom: 16 }}>Project description</Text>
-                    <ReadMoreText text={project_dexription_full_text} maxLength={100} />
+                    <ReadMoreText text={project_description_full_text} maxLength={100} />
                 </View>
                 {/* resource section */}
                 <View>
@@ -134,7 +133,7 @@ const course_info_project = () => {
                     <FlatList
                         data={data_resource}
                         renderItem={({ item }) => <Render_item_resource item={item} />}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item.id.toString()} // Convert to string
                     />
                 </View>
             </View>
@@ -144,7 +143,6 @@ const course_info_project = () => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
     },
     button_up_project: {
         backgroundColor: '#F0F0F0',
@@ -165,7 +163,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingLeft: 8,
     },
-    // student project
     student_project: {
         paddingTop: 32,
     },
@@ -176,7 +173,6 @@ const styles = StyleSheet.create({
         borderColor: '#CCCCCC',
         borderRadius: 16,
     },
-    // project resourse
     item_resource: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -189,4 +185,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default course_info_project;
+export default CourseInfoProject; 
