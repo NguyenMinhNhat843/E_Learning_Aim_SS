@@ -3,17 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
-
-const data_category = [
-    { id: 1, name: 'Business', color: '#1abc9c', icon: '📊' },
-    { id: 2, name: 'Design', color: '#9b59b6', icon: '✏️' },
-    { id: 3, name: 'Code', color: '#e74c3c', icon: '💻' },
-    { id: 4, name: 'Writing', color: '#3498db', icon: '📄' },
-    { id: 5, name: 'Movie', color: '#8e44ad', icon: '🎬' },
-    { id: 6, name: 'Language', color: '#e67e22', icon: '🌍' },
-];
+import data_category from '../../data/Data_Category';
+import { useNavigation } from '@react-navigation/native';
 
 const Category = () => {
+    const navigation = useNavigation();
+    const handleCategory = (name_category) => {
+        navigation.navigate('Search', { nameCategory: name_category });
+    };
+
     return (
         <View style={styles.category_container}>
             <View style={styles.category_header}>
@@ -25,7 +23,7 @@ const Category = () => {
             {/* Hiển thị danh mục dưới dạng lưới */}
             <View style={styles.grid}>
                 {data_category.map((category) => (
-                    <TouchableOpacity key={category.id} style={[styles.categoryItem]}>
+                    <TouchableOpacity key={category.id} style={[styles.categoryItem]} onPress={() => handleCategory(category.name)}>
                         <Text style={styles.icon}>{category.icon}</Text>
                         <Text style={styles.categoryText}>{category.name}</Text>
                     </TouchableOpacity>

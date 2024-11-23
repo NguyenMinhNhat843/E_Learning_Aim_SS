@@ -16,6 +16,7 @@ import Footer from '../Home/Footer';
 import Search_result from './Search_result';
 import { ref, get } from 'firebase/database';
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
+import { useRoute } from '@react-navigation/native';
 
 const data_hot_topics = [
     {
@@ -74,9 +75,16 @@ const data_category = [
         icon: <FontAwesomeIcon icon={faPenToSquare} />,
         name: 'Write',
     },
+    {
+        id: 6,
+        icon: <FontAwesomeIcon icon={faPenToSquare} />,
+        name: 'Movie',
+    },
 ];
 
 const Search_page = ({ navigation }) => {
+    const route = useRoute();
+
     // ======================= fetch data ========================
     const [Data_Course, setData_Course] = useState([]); // Quản lý state cho dữ liệu
 
@@ -111,7 +119,6 @@ const Search_page = ({ navigation }) => {
     const [data_SearchResult, setData_SearchResult] = useState([]); // data search result
     const [searchResultView, setSearchResultView] = useState(false); // true: view search result, false: view home page
     const [searchTopics, setSearchTopics] = useState([]); // topics search
-    const [selectedCategory, setSelectedCategory] = useState(''); // category search
 
     // hàm tìm theo text
     const searchByText = () => {
@@ -130,6 +137,13 @@ const Search_page = ({ navigation }) => {
         setData_SearchResult(result);
         setSearchResultView(!searchResultView);
     };
+
+    useEffect(() => {
+        console.log(route.params?.nameCategory);
+        if (route.params?.nameCategory) {
+            searchByCategory(route.params.nameCategory);
+        }
+    }, []);
 
     // lưu topic đã chọn vào mảng searchTopics
     const saveTopics = (topic) => {

@@ -56,11 +56,9 @@ const Home = ({ navigation }) => {
             </ScrollView>
 
             {/* Footer cố định */}
-            {/* <View style={styles.footerContainer}>
-                <Footer/>
-            </View> */}
-
-            <Footer />
+            <View style={styles.footerContainer}>
+                <Footer />
+            </View>
         </View>
     );
 };

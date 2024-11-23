@@ -1,134 +1,36 @@
-const data = [
-    {
-        id: 1,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        author: 'John Doe',
-        price: 20,
-        rating: 4.5,
-        ratingNumber: 100,
-        lessonsNumber: 10,
-        isBookMark: false,
-        topics: ['Python', 'Java', 'Design'],
-        category: 'Bussiness',
-    },
-    {
-        id: 2,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Web Development',
-        author: 'Jane Smith',
-        price: 25,
-        rating: 4.7,
-        ratingNumber: 150,
-        lessonsNumber: 12,
-        isBookMark: true,
-        topics: ['AI', 'JS', 'React'],
-        category: 'Code',
-    },
-    {
-        id: 3,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Data Science',
-        author: 'Alice Johnson',
-        price: 30,
-        rating: 4.8,
-        ratingNumber: 200,
-        lessonsNumber: 15,
-        isBookMark: false,
-        topics: ['Python', 'Java', 'Design'],
-        category: 'Code',
-    },
-    {
-        id: 4,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Project Manager',
-        author: 'John Doe',
-        price: 20,
-        rating: 4.5,
-        ratingNumber: 100,
-        lessonsNumber: 10,
-        isBookMark: false,
-        topics: ['Python', 'Java', 'Design'],
-        category: 'Bussiness',
-    },
-    {
-        id: 5,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Marketing Essentials',
-        author: 'Michael Brown',
-        price: 15,
-        rating: 4.2,
-        ratingNumber: 80,
-        lessonsNumber: 8,
-        isBookMark: true,
-        topics: ['AI', 'JS', 'React'],
-        category: 'Bussiness',
-    },
-    {
-        id: 6,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Graphic Design',
-        author: 'Emily White',
-        price: 22,
-        rating: 4.6,
-        ratingNumber: 120,
-        lessonsNumber: 10,
-        isBookMark: false,
-        topics: ['Python', 'Java', 'Design'],
-        category: 'Design',
-    },
-    {
-        id: 7,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Financial Analysis',
-        author: 'David Black',
-        price: 28,
-        rating: 4.4,
-        ratingNumber: 90,
-        lessonsNumber: 14,
-        isBookMark: true,
-        topics: ['AI', 'JS', 'React'],
-        category: 'Bussiness',
-    },
-    {
-        id: 8,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Photography Basics',
-        author: 'Chris Green',
-        price: 18,
-        rating: 4.3,
-        ratingNumber: 70,
-        lessonsNumber: 9,
-        isBookMark: false,
-        topics: ['Python', 'Java', 'Design'],
-        category: 'Design',
-    },
-    {
-        id: 9,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Mobile App Development',
-        author: 'Sophie Blue',
-        price: 35,
-        rating: 4.9,
-        ratingNumber: 250,
-        lessonsNumber: 20,
-        isBookMark: true,
-        topics: ['AI', 'JS', 'React'],
-        category: 'Code',
-    },
-    {
-        id: 10,
-        image: require('../assets/image/course_info/banner.jpg'),
-        name: 'Public Speaking',
-        author: 'Laura Gold',
-        price: 19,
-        rating: 4.1,
-        ratingNumber: 60,
-        lessonsNumber: 7,
-        isBookMark: false,
-        topics: ['test'],
-        category: 'Bussiness',
-    },
-];
+import React, { useState, useEffect } from 'react';
+import { ref, get } from 'firebase/database';
+import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
+import { useRoute } from '@react-navigation/native';
 
-export default data;
+const Data_Course = () => {
+    const [Data_Course, setData_Course] = useState([]); // Quản lý state cho dữ liệu
+
+    // Hàm fetch data từ Firebase
+    const fetchData_Course = async () => {
+        try {
+            const courseRef = ref(database, `Courses`);
+            const snapshot = await get(courseRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                // Firebase trả về dạng object, bạn cần chuyển thành array nếu cần
+                const coursesArray = Object.entries(data).map(([id, value]) => ({
+                    id,
+                    ...value,
+                }));
+                setData_Course(coursesArray); // Cập nhật state
+                console.log('Data available:', JSON.stringify(coursesArray.splice(0, 1), null, 4));
+            } else {
+                console.log('No data available');
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData_Course();
+    }, []);
+};
+
+export default Data_Course;

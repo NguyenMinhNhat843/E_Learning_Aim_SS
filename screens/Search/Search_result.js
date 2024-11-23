@@ -5,8 +5,10 @@ import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark as solidBookMark, faFilter, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Render_item_course = ({ item }) => {
+    const navigation = useNavigation();
     // xử lý đánh dấu sách
     const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
     const handleBookMark = () => {
