@@ -15,15 +15,15 @@ const Home = ({ navigation }) => {
         <View style={styles.container}>
             {/* header */}
             <View style={styles.header}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
-                            <FontAwesomeIcon style={{ color: 'white', paddingRight: 46, height: '100%', width: 24 }} icon={faCartShopping} />
-                            <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faBell} />
-                        </View>
-                        <View>
-                            <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
-                        </View>
-                    </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
+                    <FontAwesomeIcon style={{ color: 'white', paddingRight: 46, height: '100%', width: 24 }} icon={faCartShopping} />
+                    <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faBell} />
+                </View>
+                <View>
+                    <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
+                </View>
+            </View>
             <ScrollView style={styles.scrollContent}>
                 <View>
                     {/* banner */}
@@ -56,9 +56,11 @@ const Home = ({ navigation }) => {
             </ScrollView>
 
             {/* Footer cố định */}
-            <View style={styles.footerContainer}>
+            {/* <View style={styles.footerContainer}>
                 <Footer/>
-            </View>
+            </View> */}
+
+            <Footer />
         </View>
     );
 };
