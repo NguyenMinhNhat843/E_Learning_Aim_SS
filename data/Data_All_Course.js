@@ -10,6 +10,7 @@ const data = [
         lessonsNumber: 10,
         isBookMark: false,
         topics: ['Python', 'Java', 'Design'],
+        category: 'Bussiness',
     },
     {
         id: 2,
@@ -22,6 +23,7 @@ const data = [
         lessonsNumber: 12,
         isBookMark: true,
         topics: ['AI', 'JS', 'React'],
+        category: 'Code',
     },
     {
         id: 3,
@@ -34,6 +36,7 @@ const data = [
         lessonsNumber: 15,
         isBookMark: false,
         topics: ['Python', 'Java', 'Design'],
+        category: 'Code',
     },
     {
         id: 4,
@@ -46,6 +49,7 @@ const data = [
         lessonsNumber: 10,
         isBookMark: false,
         topics: ['Python', 'Java', 'Design'],
+        category: 'Bussiness',
     },
     {
         id: 5,
@@ -58,6 +62,7 @@ const data = [
         lessonsNumber: 8,
         isBookMark: true,
         topics: ['AI', 'JS', 'React'],
+        category: 'Bussiness',
     },
     {
         id: 6,
@@ -70,6 +75,7 @@ const data = [
         lessonsNumber: 10,
         isBookMark: false,
         topics: ['Python', 'Java', 'Design'],
+        category: 'Design',
     },
     {
         id: 7,
@@ -82,6 +88,7 @@ const data = [
         lessonsNumber: 14,
         isBookMark: true,
         topics: ['AI', 'JS', 'React'],
+        category: 'Bussiness',
     },
     {
         id: 8,
@@ -94,6 +101,7 @@ const data = [
         lessonsNumber: 9,
         isBookMark: false,
         topics: ['Python', 'Java', 'Design'],
+        category: 'Design',
     },
     {
         id: 9,
@@ -106,6 +114,7 @@ const data = [
         lessonsNumber: 20,
         isBookMark: true,
         topics: ['AI', 'JS', 'React'],
+        category: 'Code',
     },
     {
         id: 10,
@@ -118,6 +127,7 @@ const data = [
         lessonsNumber: 7,
         isBookMark: false,
         topics: ['test'],
+        category: 'Bussiness',
     },
 ];
 

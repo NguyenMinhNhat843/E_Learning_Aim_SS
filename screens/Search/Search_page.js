@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFilter, faMagnifyingGlass, faBusinessTime, faPenNib, faCode, faAngleRight } from '@fortawesome/free-solid-svg-icons';
@@ -64,8 +64,7 @@ const Search_page = () => {
 
     // hàm tìm theo text
     const searchByText = () => {
-        if (searchText.trim() === '' && searchTopics.length === 0) {
-            // alert('Vui lòng nhập nội dung tìm kiếm.');
+        if (searchText.trim() === '') {
             return false;
         } else {
             const result = Data_All_Course.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
@@ -74,7 +73,7 @@ const Search_page = () => {
         }
     };
 
-    // hàm tìm theo topics
+    // lưu topic đã chọn vào mảng searchTopics
     const saveTopics = (topic) => {
         if (searchTopics.includes(topic)) {
             const newTopics = searchTopics.filter((item) => item !== topic);
@@ -85,17 +84,22 @@ const Search_page = () => {
         }
     };
 
-    const searchByTopics = (topic) => {
-        saveTopics(topic);
-        const result = Data_All_Course.filter((item) => item.topics.includes(topic));
-        setData_SearchResult(result);
+    // hàm tìm theo topics
+    const searchByTopics = () => {
+        if (searchTopics.length === 0) {
+            return false;
+        } else {
+            const result = Data_All_Course.filter((item) => item.topics.some((i) => searchTopics.includes(i)));
+            setData_SearchResult(result);
+            return true;
+        }
     };
 
     // thay đổi sang view kết quả tìm kiếm
     const changeView = () => {
-        if (!searchByText()) {
-        } else {
+        if (searchByTopics() || searchByText()) {
             setSearchResultView(!searchResultView);
+            setSearchTopics([]);
         }
     };
 
@@ -135,7 +139,7 @@ const Search_page = () => {
                                             { backgroundColor: searchTopics.includes(item.title) ? 'cyan' : 'white' },
                                         ]}
                                         key={index}
-                                        onPress={() => searchByTopics(item.title)}
+                                        onPress={() => saveTopics(item.title)}
                                     >
                                         <Text>{item.title}</Text>
                                     </TouchableOpacity>
@@ -155,11 +159,11 @@ const Search_page = () => {
                                 <FlatList
                                     data={data_category}
                                     renderItem={({ item }) => (
-                                        <View style={styles.category_item}>
+                                        <TouchableOpacity style={styles.category_item}>
                                             <View style={{ padding: 8 }}>{item.icon}</View>
                                             <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
                                             <FontAwesomeIcon icon={faAngleRight} />
-                                        </View>
+                                        </TouchableOpacity>
                                     )}
                                     keyExtractor={(item) => item.id.toString()}
                                 />
