@@ -7,11 +7,20 @@ import CourseDetails_Lession from './CourseDetails_Lession';
 import CourseDetails_Review from './CourseDetails_Review';
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
 import { ref, get } from 'firebase/database';
+import { CartContext } from '../../context/CartContext';
 
 const CourseDetails = ({ navigation, route }) => {
     const { courses } = route.params;
 
     const [teacher, setTeacher] = useState([]);
+
+    // chức năng luu vào giỏ hàng
+    const { addToCart } = React.useContext(CartContext);
+
+    const handleAddToCart = () => {
+        addToCart(courses);
+        navigation.navigate('Cart');
+    };
 
     // Hàm fetch chi tiết giáo viên từ Firebase
     const fetchTeacher = async (teacherName) => {
@@ -212,7 +221,7 @@ const CourseDetails = ({ navigation, route }) => {
                     ${courses.price} {'\n'}
                     <Text style={styles.discount}> 80% Disc 1020$</Text>
                 </Text>
-                <TouchableOpacity style={styles.addToCartButton}>
+                <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
                     <Text style={styles.buttonText}>🛒Add to cart</Text>
                 </TouchableOpacity>
             </View>

@@ -11,13 +11,19 @@ import Top_teacher from './Top_teacher';
 import Footer from './Footer';
 
 const Home = ({ navigation }) => {
+    const changeToCartPage = () => {
+        navigation.navigate('Cart');
+    };
+
     return (
         <View style={styles.container}>
             {/* header */}
             <View style={styles.header}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
-                    <FontAwesomeIcon style={{ color: 'white', paddingRight: 46, height: '100%', width: 24 }} icon={faCartShopping} />
+                    <TouchableOpacity onPress={changeToCartPage}>
+                        <FontAwesomeIcon style={{ color: 'white', paddingRight: 46, height: '100%', width: 24 }} icon={faCartShopping} />
+                    </TouchableOpacity>
                     <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faBell} />
                 </View>
                 <View>
