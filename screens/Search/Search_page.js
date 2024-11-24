@@ -10,6 +10,7 @@ import {
     faAngleRight,
     faLanguage,
     faPenToSquare,
+    faChevronLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import Recommen_course from '../Home/Recomment_course';
 import Footer from '../Home/Footer';
@@ -17,6 +18,8 @@ import Search_result from './Search_result';
 import { ref, get } from 'firebase/database';
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
 import { useRoute } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native';
+import useFetchCourses from '../../hooks/useFetchCourses';
 
 const data_hot_topics = [
     {
@@ -83,16 +86,14 @@ const data_category = [
 ];
 
 const Search_page = ({ navigation }) => {
-    const route = useRoute();
-
     // ======================= fetch data ========================
-    const [Data_Course, setData_Course] = useState([]); // Quản lý state cho dữ liệu
+    const [courses, setCourses] = useState([]); // Quản lý state cho dữ liệu
 
     // Hàm fetch data từ Firebase
     const fetchData_Course = async () => {
         try {
-            const courseRef = ref(database, `Courses`);
-            const snapshot = await get(courseRef);
+            const coursesRef = ref(database, `Courses`);
+            const snapshot = await get(coursesRef);
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 // Firebase trả về dạng object, bạn cần chuyển thành array nếu cần
@@ -100,7 +101,7 @@ const Search_page = ({ navigation }) => {
                     id,
                     ...value,
                 }));
-                setData_Course(coursesArray); // Cập nhật state
+                setCourses(coursesArray); // Cập nhật state
                 console.log('Data available:', JSON.stringify(coursesArray.splice(0, 1), null, 4));
             } else {
                 console.log('No data available');
@@ -118,14 +119,13 @@ const Search_page = ({ navigation }) => {
     const [searchText, setSearchText] = useState(''); // text search
     const [data_SearchResult, setData_SearchResult] = useState([]); // data search result
     const [searchResultView, setSearchResultView] = useState(false); // true: view search result, false: view home page
-    const [searchTopics, setSearchTopics] = useState([]); // topics search
 
     // hàm tìm theo text
     const searchByText = () => {
         if (searchText.trim() === '') {
             return false;
         } else {
-            const result = Data_Course.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
+            const result = courses.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
             setData_SearchResult(result);
             return true;
         }
@@ -133,38 +133,9 @@ const Search_page = ({ navigation }) => {
 
     // search theo category
     const searchByCategory = (category) => {
-        const result = Data_Course.filter((item) => item.category.toLowerCase() === category.toLowerCase());
+        const result = courses.filter((item) => item.category.toLowerCase() === category.toLowerCase());
         setData_SearchResult(result);
         setSearchResultView(!searchResultView);
-    };
-
-    useEffect(() => {
-        console.log(route.params?.nameCategory);
-        if (route.params?.nameCategory) {
-            searchByCategory(route.params.nameCategory);
-        }
-    }, []);
-
-    // lưu topic đã chọn vào mảng searchTopics
-    const saveTopics = (topic) => {
-        if (searchTopics.includes(topic)) {
-            const newTopics = searchTopics.filter((item) => item !== topic);
-            setSearchTopics(newTopics);
-        } else {
-            const newTopics = [...searchTopics, topic];
-            setSearchTopics(newTopics);
-        }
-    };
-
-    // hàm tìm theo topics
-    const searchByTopics = () => {
-        if (searchTopics.length === 0) {
-            return false;
-        } else {
-            const result = Data_Course.filter((item) => item.topics.some((i) => searchTopics.includes(i)));
-            setData_SearchResult(result);
-            return true;
-        }
     };
 
     // thay đổi sang view kết quả tìm kiếm
@@ -181,6 +152,9 @@ const Search_page = ({ navigation }) => {
         <View style={styles.container}>
             {/* search input section */}
             <View style={styles.search_section}>
+                <TouchableOpacity onPress={() => setSearchResultView(false)}>
+                    <FontAwesomeIcon size={25} icon={faChevronLeft} />
+                </TouchableOpacity>
                 <View style={styles.search_input}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <TextInput
@@ -204,13 +178,13 @@ const Search_page = ({ navigation }) => {
                 ) : (
                     <Fragment>
                         <View style={styles.hot_topics_section}>
-                            <Text style={styles.hot_topics_text}>Hot Topics</Text>
+                            <Text style={styles.hot_topics_text}>Hot Search</Text>
                             <View style={styles.hot_topics_list}>
                                 {data_hot_topics.map((item, index) => (
                                     <TouchableOpacity
                                         style={[
                                             styles.hot_topics_item,
-                                            { backgroundColor: searchTopics.includes(item.title) ? 'cyan' : 'white' },
+                                            // { backgroundColor: searchTopics.includes(item.title) ? 'cyan' : 'white' },
                                         ]}
                                         key={index}
                                         onPress={() => saveTopics(item.title)}

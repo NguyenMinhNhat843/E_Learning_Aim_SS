@@ -7,30 +7,8 @@ import { ref, get } from 'firebase/database';
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
 import { useRoute } from '@react-navigation/native';
 
-// const lessonGroups = [
-//     {
-//         id: '1',
-//         title: 'I - Introduction',
-//         lessons: [
-//             { id: '1-1', title: 'Amet adipiscing consectetur', duration: '01:23 mins', locked: false },
-//             { id: '1-2', title: 'Adipisicing dolor amet occaeca', duration: '01:23 mins', locked: false },
-//         ],
-//     },
-//     {
-//         id: '2',
-//         title: 'II - Plan for your UX Research',
-//         lessons: [
-//             { id: '2-1', title: 'Exercitation elit incididunt esse', duration: '01:23 mins', locked: true },
-//             { id: '2-2', title: 'Duis esse ipsum labour', duration: '01:23 mins', locked: true },
-//             { id: '2-3', title: 'Labore minim reprehenderit pariatur ea deserunt', duration: '01:23 mins', locked: true },
-//         ],
-//     },
-//     { id: '3', title: 'III - Conduct UX research', lessons: [] },
-//     { id: '4', title: 'IV - Articulate findings', lessons: [] },
-// ];
-
 const CourseDetailsWithLessons = ({ course }) => {
-    console.log('lessonGroups:', JSON.stringify(course, null, 4));
+    console.log('lessonGroups:', JSON.stringify(course.lessonGroup, null, 4));
     const [expandedSection, setExpandedSection] = useState(null);
 
     const toggleExpand = (sectionId) => {
@@ -49,17 +27,18 @@ const CourseDetailsWithLessons = ({ course }) => {
         <View style={styles.container}>
             <ScrollView style={styles.subContainer}>
                 {/* Lesson Groups */}
+                <FlatList data={course.lessonGroup} />
                 {course.lessonGroup.map((group) => (
-                    <View key={group.id}>
-                        <TouchableOpacity onPress={() => toggleExpand(group.id)} style={styles.lessonGroupHeader}>
-                            <Text style={styles.lessonGroupTitle}>{group.title}</Text>
+                    <View key={group.lessonGroup_id}>
+                        <TouchableOpacity onPress={() => toggleExpand(group.lessonGroup_id)} style={styles.lessonGroupHeader}>
+                            <Text style={styles.lessonGroupTitle}>{group.lessonGroup_title}</Text>
                             <FontAwesome name={expandedSection === group.id ? 'chevron-down' : 'chevron-up'} size={16} color="gray" />
                         </TouchableOpacity>
-                        {expandedSection === group.id && group.lessons.length > 0 && (
+                        {expandedSection === group.lessonGroup_id && group.lessonList.length > 0 && (
                             <FlatList
-                                data={group.lessons}
+                                data={group.lessonList}
                                 renderItem={renderLessonItem}
-                                keyExtractor={(item) => item.id}
+                                keyExtractor={(item, index) => index.toString()}
                                 style={styles.lessonList}
                             />
                         )}
