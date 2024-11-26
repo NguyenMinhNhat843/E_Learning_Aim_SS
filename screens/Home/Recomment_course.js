@@ -6,8 +6,7 @@ import { faBookmark as solidBookMark } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { ref, get } from 'firebase/database';
-import { database } from '../../firebaseConfig';  // Import cấu hình Firebase 
-
+import { database } from '../../firebaseConfig'; // Import cấu hình Firebase
 
 const Recommen_course = ({ navigation }) => {
     const [courses, setCourses] = useState(null);
@@ -18,27 +17,26 @@ const Recommen_course = ({ navigation }) => {
         try {
             const snapshot = await get(coursesRef);
             if (snapshot.exists()) {
-                const coursesData = Object.keys(snapshot.val()).map(key => ({
+                const coursesData = Object.keys(snapshot.val()).map((key) => ({
                     id: key, // Lấy key làm id
                     ...snapshot.val()[key], // Thêm dữ liệu từ nút con
                 }));
-                console.log("Dữ liệu khóa học từ Firebase:", coursesData);
-                setCourses(coursesData);  // Lưu dữ liệu vào state
+                // console.log("Dữ liệu khóa học từ Firebase:", coursesData);
+                setCourses(coursesData); // Lưu dữ liệu vào state
             } else {
                 console.log('Không có dữ liệu');
             }
         } catch (error) {
-            console.error("Lỗi khi lấy dữ liệu Khóa học:", error);
+            console.error('Lỗi khi lấy dữ liệu Khóa học:', error);
         }
     };
 
     useEffect(() => {
-        fetchCourses();  // Gọi hàm fetch khi component mount
+        fetchCourses(); // Gọi hàm fetch khi component mount
     }, []);
 
-
     const Render_item_course = ({ item }) => {
-        if (item.status === "Recommend") {
+        if (item.status === 'Recommend') {
             const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
             const handleBookMark = () => {
                 setIsBookMark(!isBookMark);
@@ -50,8 +48,11 @@ const Recommen_course = ({ navigation }) => {
             };
 
             return (
-                <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView",{courses:item})}>
-                    <Image source={{uri:item.image.url}} style={styles.course_item_image} />
+                <TouchableOpacity
+                    style={styles.course_item}
+                    onPress={() => navigation.navigate('CourseDetails_OverView', { courses: item })}
+                >
+                    <Image source={{ uri: item.image.url }} style={styles.course_item_image} />
                     <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
                         <View>
                             <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
@@ -89,7 +90,7 @@ const Recommen_course = ({ navigation }) => {
             <View style={styles.popular_course_header}>
                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Recommend for you</Text>
                 <TouchableOpacity>
-                    <Text style={{ color: '#007BFF', }}>View more</Text>
+                    <Text style={{ color: '#007BFF' }}>View more</Text>
                 </TouchableOpacity>
             </View>
             {/* lisst popular course section */}

@@ -1,12 +1,25 @@
-
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faFilter, faMagnifyingGlass, faBusinessTime, faPenNib, faCode, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import {
+    faFilter,
+    faMagnifyingGlass,
+    faBusinessTime,
+    faPenNib,
+    faCode,
+    faAngleRight,
+    faLanguage,
+    faPenToSquare,
+    faChevronLeft,
+} from '@fortawesome/free-solid-svg-icons';
 import Recommen_course from '../Home/Recomment_course';
 import Footer from '../Home/Footer';
-import Data_All_Course from '../../data/Data_All_Course';
 import Search_result from './Search_result';
+import { ref, get } from 'firebase/database';
+import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
+import { useRoute } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native';
+import useFetchCourses from '../../hooks/useFetchCourses';
 
 const data_hot_topics = [
     {
@@ -55,55 +68,93 @@ const data_category = [
         icon: <FontAwesomeIcon icon={faCode} />,
         name: 'Code',
     },
+    {
+        id: 4,
+        icon: <FontAwesomeIcon icon={faLanguage} />,
+        name: 'Language',
+    },
+    {
+        id: 5,
+        icon: <FontAwesomeIcon icon={faPenToSquare} />,
+        name: 'Write',
+    },
+    {
+        id: 6,
+        icon: <FontAwesomeIcon icon={faPenToSquare} />,
+        name: 'Movie',
+    },
 ];
 
-const Search_page = ({navigation}) => {
+const Search_page = ({ navigation }) => {
+    // ======================= fetch data ========================
+    const [courses, setCourses] = useState([]); // Quản lý state cho dữ liệu
+
+    // Hàm fetch data từ Firebase
+    const fetchData_Course = async () => {
+        try {
+            const coursesRef = ref(database, `Courses`);
+            const snapshot = await get(coursesRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                // Firebase trả về dạng object, bạn cần chuyển thành array nếu cần
+                const coursesArray = Object.entries(data).map(([id, value]) => ({
+                    id,
+                    ...value,
+                }));
+                setCourses(coursesArray); // Cập nhật state
+                console.log('Data available:', JSON.stringify(coursesArray.splice(0, 1), null, 4));
+            } else {
+                console.log('No data available');
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData_Course();
+    }, []);
+
+    // ======================= search ========================
     const [searchText, setSearchText] = useState(''); // text search
     const [data_SearchResult, setData_SearchResult] = useState([]); // data search result
     const [searchResultView, setSearchResultView] = useState(false); // true: view search result, false: view home page
-    const [searchTopics, setSearchTopics] = useState([]); // topics search
 
     // hàm tìm theo text
     const searchByText = () => {
-        if (searchText.trim() === '' && searchTopics.length === 0) {
-            // alert('Vui lòng nhập nội dung tìm kiếm.');
+        if (searchText.trim() === '') {
             return false;
         } else {
-            const result = Data_All_Course.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
+            const result = courses.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
             setData_SearchResult(result);
             return true;
         }
     };
 
-    // hàm tìm theo topics
-    const saveTopics = (topic) => {
-        if (searchTopics.includes(topic)) {
-            const newTopics = searchTopics.filter((item) => item !== topic);
-            setSearchTopics(newTopics);
-        } else {
-            const newTopics = [...searchTopics, topic];
-            setSearchTopics(newTopics);
-        }
-    };
-
-    const searchByTopics = (topic) => {
-        saveTopics(topic);
-        const result = Data_All_Course.filter((item) => item.topics.includes(topic));
+    // search theo category
+    const searchByCategory = (category) => {
+        const result = courses.filter((item) => item.category.toLowerCase() === category.toLowerCase());
         setData_SearchResult(result);
+        setSearchResultView(!searchResultView);
     };
 
     // thay đổi sang view kết quả tìm kiếm
     const changeView = () => {
-        if (!searchByText()) {
-        } else {
+        if (searchByText() || searchByCategory()) {
             setSearchResultView(!searchResultView);
         }
     };
+
+    // ======================= show all ========================
+    const [showAllCategory, setShowAllCategory] = useState(false);
 
     return (
         <View style={styles.container}>
             {/* search input section */}
             <View style={styles.search_section}>
+                <TouchableOpacity onPress={() => setSearchResultView(false)}>
+                    <FontAwesomeIcon size={25} icon={faChevronLeft} />
+                </TouchableOpacity>
                 <View style={styles.search_input}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <TextInput
@@ -127,16 +178,16 @@ const Search_page = ({navigation}) => {
                 ) : (
                     <Fragment>
                         <View style={styles.hot_topics_section}>
-                            <Text style={styles.hot_topics_text}>Hot Topics</Text>
+                            <Text style={styles.hot_topics_text}>Hot Search</Text>
                             <View style={styles.hot_topics_list}>
                                 {data_hot_topics.map((item, index) => (
                                     <TouchableOpacity
                                         style={[
                                             styles.hot_topics_item,
-                                            { backgroundColor: searchTopics.includes(item.title) ? 'cyan' : 'white' },
+                                            // { backgroundColor: searchTopics.includes(item.title) ? 'cyan' : 'white' },
                                         ]}
                                         key={index}
-                                        onPress={() => searchByTopics(item.title)}
+                                        onPress={() => saveTopics(item.title)}
                                     >
                                         <Text>{item.title}</Text>
                                     </TouchableOpacity>
@@ -148,19 +199,19 @@ const Search_page = ({navigation}) => {
                         <View style={styles.category_section}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Category</Text>
-                                <TouchableOpacity>
-                                    <Text style={{ color: 'cyan' }}>View more</Text>
+                                <TouchableOpacity onPress={() => setShowAllCategory(!showAllCategory)}>
+                                    <Text style={{ color: 'cyan' }}>{showAllCategory ? 'View less' : 'View more'}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ paddingTop: 16 }}>
                                 <FlatList
-                                    data={data_category}
+                                    data={showAllCategory ? data_category : data_category.slice(0, 3)}
                                     renderItem={({ item }) => (
-                                        <View style={styles.category_item}>
+                                        <TouchableOpacity style={styles.category_item} onPress={() => searchByCategory(item.name)}>
                                             <View style={{ padding: 8 }}>{item.icon}</View>
                                             <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
                                             <FontAwesomeIcon icon={faAngleRight} />
-                                        </View>
+                                        </TouchableOpacity>
                                     )}
                                     keyExtractor={(item) => item.id.toString()}
                                 />
@@ -183,7 +234,7 @@ const Search_page = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         marginTop: 56,
-        flex:1,
+        flex: 1,
         backgroundColor: 'white',
     },
     search_section: {
@@ -259,7 +310,7 @@ const styles = StyleSheet.create({
     footerContainer: {
         position: 'absolute',
         bottom: 0,
-    }
+    },
 });
 
 export default Search_page;

@@ -5,8 +5,10 @@ import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark as solidBookMark, faFilter, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Render_item_course = ({ item }) => {
+    const navigation = useNavigation();
     // xử lý đánh dấu sách
     const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
     const handleBookMark = () => {
@@ -20,9 +22,9 @@ const Render_item_course = ({ item }) => {
     };
 
     return (
-        <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView",{courses:item})}>
+        <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate('CourseDetails_OverView', { courses: item })}>
             {/* image course */}
-            <Image source={item.image} style={styles.course_item_image} />
+            <Image source={{ uri: item.image.url }} style={styles.course_item_image} />
 
             {/* info course */}
             <View style={styles.info_course}>
@@ -61,7 +63,7 @@ const Render_item_course = ({ item }) => {
     );
 };
 
-const Search_result = ({ data,navigation }) => {
+const Search_result = ({ data, navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             {data.length === 0 ? (

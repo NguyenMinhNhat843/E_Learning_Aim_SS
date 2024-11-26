@@ -38,8 +38,8 @@ const Footer = ({ user }) => {
         else if (page === 'SEARCH') targetPage = 'Search';
         else if (page === 'MY COURSE') targetPage = 'My Course';
         else if (page === 'PROFILE') targetPage = 'Profile';
-        
-        navigation.navigate(targetPage); // Điều hướng đến các trang khác
+
+        navigation.navigate(targetPage, { reload: true }); // Điều hướng đến các trang khác
     };
 
     // Theo dõi và cập nhật trang được chọn khi điều hướng
@@ -54,13 +54,7 @@ const Footer = ({ user }) => {
         <View style={styles.container}>
             <FlatList
                 data={data}
-                renderItem={({ item }) => (
-                    <RenderItem
-                        item={item}
-                        pageSelected={pageSelected}
-                        handlePageSelected={handlePageSelected}
-                    />
-                )}
+                renderItem={({ item }) => <RenderItem item={item} pageSelected={pageSelected} handlePageSelected={handlePageSelected} />}
                 keyExtractor={(item) => item.id.toString()}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
