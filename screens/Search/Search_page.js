@@ -17,9 +17,6 @@ import Footer from '../Home/Footer';
 import Search_result from './Search_result';
 import { ref, get } from 'firebase/database';
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
-import { useRoute } from '@react-navigation/native';
-import { ActivityIndicator } from 'react-native';
-import useFetchCourses from '../../hooks/useFetchCourses';
 
 const data_hot_topics = [
     {
