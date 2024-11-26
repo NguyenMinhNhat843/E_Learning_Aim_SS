@@ -84,7 +84,7 @@ const Course_info_QA = ({ course }) => {
             const courseID = course.id;
 
             if (!userID || !courseID) {
-                console.error('UserID hoặc CourseID không tồn tại');
+                // console.error('UserID hoặc CourseID không tồn tại');
                 setQA([]);
                 return;
             }

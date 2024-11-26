@@ -1,9 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
-import data_category from '../../data/Data_Category';
 import { useNavigation } from '@react-navigation/native';
 
 const Category = () => {
@@ -21,14 +17,14 @@ const Category = () => {
                 </TouchableOpacity>
             </View>
             {/* Hiển thị danh mục dưới dạng lưới */}
-            <View style={styles.grid}>
+            {/* <View style={styles.grid}>
                 {data_category.map((category) => (
                     <TouchableOpacity key={category.id} style={[styles.categoryItem]} onPress={() => handleCategory(category.name)}>
                         <Text style={styles.icon}>{category.icon}</Text>
                         <Text style={styles.categoryText}>{category.name}</Text>
                     </TouchableOpacity>
                 ))}
-            </View>
+            </View> */}
         </View>
     );
 };

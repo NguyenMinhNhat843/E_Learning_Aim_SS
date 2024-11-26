@@ -54,9 +54,9 @@ const Render_item_course = ({ item }) => {
                         )}
                     </TouchableOpacity>
                     <Text style={{ paddingRight: 16 }}>
-                        {item.rating} ({item.ratingNumber})
+                        {item.rating} ({item.rank})
                     </Text>
-                    <Text>{item.lessonsNumber} lessons</Text>
+                    <Text>{item.lessons} lessons</Text>
                 </View>
             </View>
         </TouchableOpacity>

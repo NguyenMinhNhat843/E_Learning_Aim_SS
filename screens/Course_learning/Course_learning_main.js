@@ -12,14 +12,14 @@ import Lesson_Tab from './Course_learning_lessons';
 import { ref, get } from 'firebase/database';
 import { database } from '../../firebaseConfig';
 
-const Course_learning_main = ({ navigation,route }) => {
+const Course_learning_main = ({ navigation, route }) => {
     const { courses } = route.params || {};
 
     if (!courses) {
         return <Text>Error: Courses data not found!</Text>;
     }
 
-    const [tabSelected, setTabSelected] = useState('LESSONS');
+    const [tabSelected, setTabSelected] = useState('PROJECT');
     const handleTabSelected = (tab) => {
         setTabSelected(tab);
     };
@@ -29,20 +29,20 @@ const Course_learning_main = ({ navigation,route }) => {
         setLikeCourseSelected(!likeCourseSelected);
     };
 
-
     const [course, setCourse] = useState([]); //  khóa học chi tiết
 
     // Hàm fetch chi tiết khóa học từ `Courses`
     const fetchCourseDetails = async (courseID) => {
         try {
-            const courseRef = ref(database, `Courses/${courseID - 1}`); // Truy vấn theo khóa học có id = courseID
+            // Truy vấn khóa học dựa trên courseID
+            const courseRef = ref(database, `Courses/${courseID - 1}`);
             const snapshot = await get(courseRef);
-    
+
             if (snapshot.exists()) {
-                // Sử dụng courseID để đảm bảo ID đúng
+                // Cập nhật state với dữ liệu từ Firebase
                 setCourse({
-                    id: courseID, // Sử dụng courseID làm id thực tế
-                    ...snapshot.val(), // Thêm các trường dữ liệu khác từ Firebase
+                    id: courseID, // Sử dụng courseID làm ID thực tế
+                    ...snapshot.val(), // Gộp thêm các trường khác từ Firebase
                 });
             } else {
                 console.error('Khóa học không tồn tại trong bảng Courses.');
@@ -50,30 +50,35 @@ const Course_learning_main = ({ navigation,route }) => {
         } catch (error) {
             console.error('Lỗi khi fetch dữ liệu khóa học:', error);
         } finally {
-            setLoading(false); // Kết thúc trạng thái tải
+            // Kết thúc trạng thái tải
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (courses.courseID) {
-            fetchCourseDetails(courses.courseID); // Lấy dữ liệu chi tiết khi component mount
+        if (courses && courses.courseID) {
+            // Kiểm tra courseID tồn tại trước khi gọi hàm
+            fetchCourseDetails(courses.courseID); // Lấy dữ liệu chi tiết
+        } else {
+            console.error('Không có courseID để fetch dữ liệu.');
         }
-    }, [courses]);
+        console.log('course-learning main:', course);
+    }, [courses]); // Theo dõi `courses` để tự động cập nhật
 
     const courseImageUrl = course?.image?.url || 'https://via.placeholder.com/150';
 
     return (
-        <ScrollView style={{marginTop:30, padding: 16}}>
+        <ScrollView style={{ marginTop: 30, padding: 16 }}>
             <View style={StyleSheet.container}>
                 {/* Header */}
                 <View style={styles.header}>
-                <TouchableOpacity style={styles.iconButton} >
-                    <Ionicons name="arrow-back" size={24} color="black" onPress={() => navigation.goBack()} />
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.iconButton}>
+                        <Ionicons name="arrow-back" size={24} color="black" onPress={() => navigation.goBack()} />
+                    </TouchableOpacity>
                     <Text style={styles.course_name}>{course.name}</Text>
                     <TouchableOpacity style={styles.header_right}>
-                        <FontAwesomeIcon style={styles.header_icon} icon={faBookmark} size={20}/>
-                        <FontAwesomeIcon style={styles.header_icon} icon={faEllipsisVertical} size={20}/>
+                        <FontAwesomeIcon style={styles.header_icon} icon={faBookmark} size={20} />
+                        <FontAwesomeIcon style={styles.header_icon} icon={faEllipsisVertical} size={20} />
                     </TouchableOpacity>
                 </View>
 
@@ -102,7 +107,9 @@ const Course_learning_main = ({ navigation,route }) => {
                         </View>
                     </View>
 
-                    <Text style={styles.subText}>⭐{course.rank} ({course.countLean}) • {course.lessons} lessons</Text>
+                    <Text style={styles.subText}>
+                        ⭐{course.rank} ({course.countLean}) • {course.lessons} lessons
+                    </Text>
                 </View>
 
                 {/* Tab */}
@@ -119,7 +126,13 @@ const Course_learning_main = ({ navigation,route }) => {
                 </View>
 
                 {/* Tab Q&A */}
-                {tabSelected === 'Q&A' ? <Course_info_QA course={course} /> : tabSelected === 'PROJECT' ? <Course_info_project course={course}/> : <Lesson_Tab />}
+                {tabSelected === 'Q&A' ? (
+                    <Course_info_QA course={course} />
+                ) : tabSelected === 'PROJECT' ? (
+                    <Course_info_project course={course} />
+                ) : (
+                    <Lesson_Tab course={course} />
+                )}
             </View>
         </ScrollView>
     );
@@ -174,7 +187,7 @@ const styles = StyleSheet.create({
     },
 
     subText: {
-        fontSize:20,
+        fontSize: 20,
         color: 'gray',
         paddingLeft: 12,
         marginTop: 8,

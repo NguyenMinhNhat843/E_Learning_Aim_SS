@@ -40,7 +40,7 @@ export default function App() {
             <CartProvider>
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName="Search"
+                        initialRouteName="Login"
                         screenOptions={{
                             headerShown: false,
                         }}

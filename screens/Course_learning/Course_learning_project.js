@@ -64,6 +64,7 @@ const Course_learning_project = ({ course }) => {
     const [projectNumber, setProjectNumber] = useState(0); // Store project number
 
     useEffect(() => {
+        
         const fetchProjects = async (userID, courseID) => {
             try {
                 const projectsRef = ref(database, 'Projects'); // Trỏ đến nhánh Projects trong Firebase
@@ -89,9 +90,8 @@ const Course_learning_project = ({ course }) => {
         if (user && course) {
             const userID = user.id;
             const courseID = course.id;
-
             if (!userID || !courseID) {
-                console.error('UserID hoặc CourseID không tồn tại');
+                // console.error('UserID hoặc CourseID không tồn tại');
                 setProjects([]);
                 setProjectNumber(0); // If no valid user/course, set project number to 0
                 return;

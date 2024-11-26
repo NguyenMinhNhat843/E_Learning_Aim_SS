@@ -18,6 +18,7 @@ import Search_result from './Search_result';
 import { ref, get } from 'firebase/database';
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
 
+
 const data_hot_topics = [
     {
         id: 1,
