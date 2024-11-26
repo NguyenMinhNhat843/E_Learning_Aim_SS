@@ -44,7 +44,7 @@ const Home = ({ navigation }) => {
                     {/* popular course */}
                     <Popular_course navigation={navigation} />
 
-                    {/* recommen course */}
+                    {/* recommend course */}
                     <Recomment_course navigation={navigation} />
 
                     {/* course inspires */}

@@ -173,7 +173,8 @@ const CourseDetails = ({ navigation, route }) => {
 
                 <View style={styles.header}>
                     <Video
-                        source={require('../../assets/video/WhatIsUXDesign.mp4')} // Đường dẫn tới video
+                        // source={require('../../assets/video/WhatIsUXDesign.mp4')} // Đường dẫn tới video
+                        source={{ uri: courses.video }} 
                         style={styles.video}
                         useNativeControls={true}  //Tạo ra các điều khiển phát/dừng mặc định (phát video khi nhấn vào).
                         controls={true}          // Hiển thị các điều khiển phát video như play/pause
@@ -258,7 +259,8 @@ const styles = StyleSheet.create({
     video: {
         width: '100%',
         height: 200,
-        borderRadius: 10,
+        borderRadius: 15,
+        backgroundColor: 'black',
     },
     title: {
         fontSize: 26,

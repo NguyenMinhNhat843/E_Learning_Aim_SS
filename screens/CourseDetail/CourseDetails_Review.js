@@ -3,50 +3,6 @@ import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, FlatList }
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
 import { ref, get } from 'firebase/database';
 
-
-// const reviews = [
-//     {
-//         id: '1',
-//         name: 'Jinny Oslin',
-//         avatar: require('../../assets/image/courseDetailsReview_img/Commentator1.png'),
-//         review: 'Nostrud excepteur magna id est quis in aliqua consequat. Exercitation enim eiusmod elit sint labor... ',
-//         rating: 5,
-//         time: 'A day ago',
-//     },
-//     {
-//         id: '2',
-//         name: 'Jane Barry',
-//         avatar: require('../../assets/image/courseDetailsReview_img/Commentator2.png'),
-//         review: 'Deserunt minim incididunt cillum nostrud do voluptate excepteur excepteur minim ex minim est',
-//         rating: 3,
-//         time: 'A day ago',
-//     },
-//     {
-//         id: '3',
-//         name: 'Claire Mignard',
-//         avatar: require('../../assets/image/courseDetailsReview_img/Commentator3.png'),
-//         review: 'Magna id sint irure in cillum esse nisi dolor laboris ullamco. Consecuter proident...',
-//         rating: 4,
-//         time: 'A day ago',
-//     },
-//     {
-//         id: '4',
-//         name: 'Mai Chien No',
-//         avatar: require('../../assets/image/courseDetailsReview_img/Commentator4.jpg'),
-//         review: 'Great course, reasonable tuition, everyone should take it!',
-//         rating: 4,
-//         time: 'A day ago',
-//     },
-//     {
-//         id: '5',
-//         name: 'Khac Truong',
-//         avatar: require('../../assets/image/courseDetailsReview_img/Commentator5.png'),
-//         review: 'The course was pretty bad, I could not follow it very well!!!',
-//         rating: 2,
-//         time: 'A day ago',
-//     },
-// ];
-
 const CourseDetailsWithReviews = ({ courses }) => {
     // Trạng thái bộ lọc hiện tại (All, 5★, 4★,...)
     const [selectedRating, setSelectedRating] = useState('ALL');

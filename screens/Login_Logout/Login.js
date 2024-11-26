@@ -114,7 +114,7 @@ const Login = () => {
             {/* login button */}
             <View style={{ width: '100%' }}>
                 <TouchableOpacity style={styles.login_button}>
-                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'medium', textAlign: 'center', fontWeight:500 }}>Login My user</Text>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'medium', textAlign: 'center', fontWeight:500 }}></Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 8 }}>
                     <Text style={{ fontSize: 16 }}>You don't have an account yet?</Text>

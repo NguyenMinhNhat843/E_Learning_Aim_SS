@@ -15,7 +15,7 @@ const data = [
 // Component hiển thị từng mục trong Footer
 const RenderItem = ({ item, pageSelected, handlePageSelected }) => {
     const page = item.name.toUpperCase();
-    const color = pageSelected === page ? 'cyan' : 'black'; // Đổi màu khi được chọn
+    const color = pageSelected === page ? '#007BFF' : 'black'; // Đổi màu khi được chọn
 
     return (
         <TouchableOpacity style={styles.item} onPress={() => handlePageSelected(page)}>

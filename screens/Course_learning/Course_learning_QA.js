@@ -1,88 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, FlatList, TextInput, Pressable } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeart, faComment, faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as solidHeart, faFire } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '../Login_Logout/UserContext';
+import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
+import { ref, get, onValue } from 'firebase/database';
 
-// const data_question = [
-//     {
-//         id: '1',
-//         avatar: '../../assets/image/course_info/banner.jpg',
-//         username: 'Jane Barry',
-//         time: '1 day ago',
-//         question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
-//         like: 23,
-//         comment: 5,
-//     },
-//     {
-//         id: '2',
-//         avatar: '../../assets/image/course_info/banner.jpg',
-//         username: 'Jane Barry',
-//         time: '1 day ago',
-//         question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
-//         like: 23,
-//         comment: 5,
-//     },
-//     {
-//         id: '3',
-//         avatar: '../../assets/image/course_info/banner.jpg',
-//         username: 'Jane Barry',
-//         time: '1 day ago',
-//         question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
-//         like: 23,
-//         comment: 5,
-//     },
-//     {
-//         id: '4',
-//         avatar: '../../assets/image/course_info/banner.jpg',
-//         username: 'Jane Barry',
-//         time: '1 day ago',
-//         question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates',
-//         like: 23,
-//         comment: 5,
-//     },
-// ];
-// const Question_item = ({ item }) => {
-//     const { avatar, username, time, question, like, comment } = item;
 
-//     const [likeQuestionlected, setLikeCQuestionSelected] = useState(false);
-//     const handleQuestionCourse = () => {
-//         setLikeCQuestionSelected(!likeQuestionlected);
-//     };
-
-//     return (
-//         <View style={styles.item_container}>
-//             {/* avatar */}
-//             <View style={styles.user}>
-//                 <View style={styles.avatar_wrap}>
-//                     <Image style={styles.avatar} source={require('../../assets/image/course_info/banner.jpg')} resizeMode="cover" />
-//                 </View>
-//                 <View style={styles.user_name}>
-//                     <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{username}</Text>
-//                     <Text style={{ fontSize: 14, color: '#ccc' }}>{time}</Text>
-//                 </View>
-//             </View>
-//             {/* comment */}
-//             <Text style={styles.question}>{question}</Text>
-//             {/* like and comment */}
-//             <View style={styles.like_comment}>
-//                 <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
-//                     {likeQuestionlected ? (
-//                         <FontAwesomeIcon style={{ paddingRight: 8, color: 'red' }} icon={solidHeart} />
-//                     ) : (
-//                         <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
-//                     )}
-//                 </Pressable>
-//                 <Text style={{ paddingRight: 24 }}>{like}</Text>
-//                 <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
-//                 <Text style={{ paddingRight: 16 }}>{comment} comment</Text>
-//             </View>
-//         </View>
-//     );
-// };
-
-const Course_info_QA = () => {
+const Course_info_QA = ({ course }) => {
     const { user } = useUser();
 
     const [likeQuestionlected, setLikeCQuestionSelected] = useState(false);
@@ -90,95 +16,94 @@ const Course_info_QA = () => {
         setLikeCQuestionSelected(!likeQuestionlected);
     };
 
+    const Question_item = ({ item }) => {
+
+        const [likeQuestionlected, setLikeCQuestionSelected] = useState(false);
+        const handleQuestionCourse = () => {
+            setLikeCQuestionSelected(!likeQuestionlected);
+        };
+    
+        return (
+            <View style={styles.item_container}>
+                {/* avatar */}
+                <View style={styles.user}>
+                    <View style={styles.avatar_wrap}>
+                        <Image style={styles.avatar} source={{ uri: user.image.url }} resizeMode="cover" />
+                    </View>
+                    <View style={styles.user_name}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user.name}</Text>
+                        <Text style={{ fontSize: 14, color: '#ccc' }}>{user.course_learning.time}</Text>
+                    </View>
+                </View>
+                {/* content */}
+                <Text style={styles.question}>{item.content}</Text>
+                {/* like and comment */}
+                <View style={styles.like_comment}>
+                    <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
+                        {likeQuestionlected ? (
+                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'red' }} icon={solidHeart} />
+                        ) : (
+                            <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
+                        )}
+                    </Pressable>
+                    <Text style={{ paddingRight: 24 }}>{item.likes}</Text>
+                    <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
+                    <Text style={{ paddingRight: 16 }}>{item.comments} comment</Text>
+                </View>
+            </View>
+        );
+    };
+
+    const [QA, setQA] = useState([]);
+
+    useEffect(() => {
+        const fetchQA = async (userID, courseID) => {
+            try {
+                const QARef = ref(database, 'question_answer'); // Trỏ đến nhánh QA trong Firebase
+                const snapshot = await get(QARef);
+
+                if (snapshot.exists()) {
+                    // Chuyển đổi object thành mảng và lọc theo userID và courseID
+                    const allQA = Object.values(snapshot.val());
+                    const filteredQA = allQA.filter(
+                        (QA) => QA.userID === userID && QA.courseID === courseID
+                    );
+                    setQA(filteredQA);
+                } else {
+                    setQA([]);
+                }
+            } catch (error) {
+                console.error('Lỗi khi fetch dữ liệu QA:', error);
+            } finally {
+            }
+        };
+
+        if (user && course) {
+
+            const userID = user.id;
+            const courseID = course.id;
+
+            if (!userID || !courseID) {
+                console.error('UserID hoặc CourseID không tồn tại');
+                setQA([]);
+                return;
+            }
+
+            fetchQA(userID, courseID);
+        } else {
+            setQA([]);
+        }
+    }, [user, course]);
+
     return (
         <View style={styles.container}>
-            {/* <FlatList 
-                data={data_question} 
+            <FlatList 
+                data={QA} 
                 renderItem={({ item }) => <Question_item item={item} />} 
                 keyExtractor={(item) => item.id} 
-            /> */}
-            <View style={styles.item_container}>
-                {/* avatar */}
-                <View style={styles.user}>
-                    <View style={styles.avatar_wrap}>
-                        <Image style={styles.avatar} source={{ uri: user.image.url }} resizeMode="cover" />
-                    </View>
-                    <View style={styles.user_name}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user.name}</Text>
-                        <Text style={{ fontSize: 14, color: '#ccc' }}>{user.course_learning.time}</Text>
-                    </View>
-                </View>
-                {/* comment */}
-                <Text style={styles.question}>Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates</Text>
-                {/* like and comment */}
-                <View style={styles.like_comment}>
-                    <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
-                        {likeQuestionlected ? (
-                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'red' }} icon={solidHeart} />
-                        ) : (
-                            <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
-                        )}
-                    </Pressable>
-                    <Text style={{ paddingRight: 24 }}>23</Text>
-                    <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
-                    <Text style={{ paddingRight: 16 }}>5 comment</Text>
-                </View>
-            </View>
-            <View style={styles.item_container}>
-                {/* avatar */}
-                <View style={styles.user}>
-                    <View style={styles.avatar_wrap}>
-                        <Image style={styles.avatar} source={{ uri: user.image.url }} resizeMode="cover" />
-                    </View>
-                    <View style={styles.user_name}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user.name}</Text>
-                        <Text style={{ fontSize: 14, color: '#ccc' }}>{user.course_learning.time}</Text>
-                    </View>
-                </View>
-                {/* comment */}
-                <Text style={styles.question}>Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates</Text>
-                {/* like and comment */}
-                <View style={styles.like_comment}>
-                    <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
-                        {likeQuestionlected ? (
-                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'red' }} icon={solidHeart} />
-                        ) : (
-                            <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
-                        )}
-                    </Pressable>
-                    <Text style={{ paddingRight: 24 }}>23</Text>
-                    <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
-                    <Text style={{ paddingRight: 16 }}>5 comment</Text>
-                </View>
-            </View>
-            <View style={styles.item_container}>
-                {/* avatar */}
-                <View style={styles.user}>
-                    <View style={styles.avatar_wrap}>
-                        <Image style={styles.avatar} source={{ uri: user.image.url }} resizeMode="cover" />
-                    </View>
-                    <View style={styles.user_name}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user.name}</Text>
-                        <Text style={{ fontSize: 14, color: '#ccc' }}>{user.course_learning.time}</Text>
-                    </View>
-                </View>
-                {/* comment */}
-                <Text style={styles.question}>Lorem ipsum dolor sit amet consectetur adipisicing elit.ue vero nesciunt cupiditate sint, quas quae voluptates</Text>
-                {/* like and comment */}
-                <View style={styles.like_comment}>
-                    <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
-                        {likeQuestionlected ? (
-                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'red' }} icon={solidHeart} />
-                        ) : (
-                            <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
-                        )}
-                    </Pressable>
-                    <Text style={{ paddingRight: 24 }}>23</Text>
-                    <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
-                    <Text style={{ paddingRight: 16 }}>5 comment</Text>
-                </View>
-            </View>
-            {/* my comment */}
+            />
+
+            {/* my comment */}  
             <View style={styles.my_comment}>
                 <View style={styles.avatar_wrap}>
                     <Image style={styles.avatar} source={{ uri: user.image.url }} />

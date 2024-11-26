@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Footer from '../Home/Footer';
-import { useUser } from '../Login_Logout/UserContext'; 
+import { useUser } from '../Login_Logout/UserContext';
+import ProgressBar from './progressBar'; // Đảm bảo đường dẫn đúng
+
 
 const MyCourses = ({ navigation, route }) => {
     const { user } = useUser(); // Lấy thông tin người dùng từ context
@@ -27,12 +29,14 @@ const MyCourses = ({ navigation, route }) => {
     };
 
     const CourseCard = ({ course }) => (
-        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("CourseLearning", {courses:course})}>
-            <Image source={{ uri:course.image }} style={styles.image} />
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("CourseLearning", { courses: course })}>
+            <Image source={{ uri: course.image }} style={styles.image} />
             <View style={styles.details}>
                 <Text style={styles.title}>{course.name}</Text>
                 <Text style={styles.time}>{course.time}</Text>
                 <Text style={styles.progressText}>{Math.round(course.progress * 100)}% Complete</Text>
+                {/* Thêm thanh tiến độ ở đây */}
+                <ProgressBar progress={course.progress}/>
             </View>
         </TouchableOpacity>
     );
@@ -135,8 +139,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     image: {
-        width: 60,
-        height: 60,
+        width: 80,
+        height: 80,
         borderRadius: 10,
     },
     details: {
@@ -144,17 +148,18 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     title: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     time: {
-        fontSize: 14,
+        fontSize: 18,
         color: '#777',
         marginVertical: 5,
     },
     progressText: {
         marginTop: 5,
-        fontSize: 12,
+        marginBottom: 5,
+        fontSize: 15,
         color: '#007BFF',
     },
     courseList: {

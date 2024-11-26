@@ -10,7 +10,7 @@ const Signup = () => {
     const navigation = useNavigation();
 
     // State để lưu trữ dữ liệu nhập vào
-    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [fullName, setFullName] = useState('');
     const [technique, setTechnique] = useState('');
     const [userName, setUserName] = useState('');
@@ -24,10 +24,10 @@ const Signup = () => {
     // Hàm đăng ký người dùng
     const handleSignUp = () => {
         // Kiểm tra nếu các trường bắt buộc đều có dữ liệu
-        if (email && fullName && technique && userName && password) {
+        if (phone && fullName && technique && userName && password) {
             const newUserId = new Date().getTime().toString();  // Tạo ID người dùng (có thể dùng cách khác)
             const newUser = {
-                email,
+                phone,
                 name: fullName,
                 technique,
                 userName,
@@ -77,15 +77,6 @@ const Signup = () => {
             {/* Form signup */}
             <View style={styles.form_signup}>
                 <View style={styles.group}>
-                    <FontAwesomeIcon style={styles.icon} icon={faEnvelope} />
-                    <TextInput
-                        style={styles.input_control}
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={setEmail}
-                    />
-                </View>
-                <View style={styles.group}>
                     <FontAwesomeIcon style={styles.icon} icon={faUserPlus} />
                     <TextInput
                         style={styles.input_control}
@@ -96,7 +87,17 @@ const Signup = () => {
                 </View>
 
                 <View style={styles.group}>
-                    <FontAwesomeIcon style={styles.icon} icon={faMobile} />
+                    <FontAwesomeIcon style={styles.icon} icon={faUserPlus} />
+                    <TextInput
+                        style={styles.input_control}
+                        placeholder="Phone"
+                        value={phone}
+                        onChangeText={setPhone}
+                    />
+                </View>
+
+                <View style={styles.group}>
+                    <FontAwesomeIcon style={styles.icon} icon={faUserPlus} />
                     <TextInput
                         style={styles.input_control}
                         placeholder="Technique"
@@ -105,7 +106,7 @@ const Signup = () => {
                     />
                 </View>
 
-                <View style={styles.group}>
+                <View style={[styles.group, { marginTop: 50 }]}>
                     <FontAwesomeIcon style={styles.icon} icon={faMobile} />
                     <TextInput
                         style={styles.input_control}
@@ -135,7 +136,7 @@ const Signup = () => {
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 16 }}>
                 <Text>Already have an account?</Text>
                 <TouchableOpacity style={{ paddingLeft: 12 }} onPress={navigation_to_login}>
-                    <Text style={{ color: 'cyan', fontWeight: 'bold' }}>Login</Text>
+                    <Text style={{ color: 'blue', fontWeight: 'bold' }}>Login</Text>
                 </TouchableOpacity>
             </View>
         </View>

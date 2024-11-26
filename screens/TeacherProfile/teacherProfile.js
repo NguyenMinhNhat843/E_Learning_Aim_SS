@@ -15,7 +15,7 @@ const TeacherProfile = ({ navigation, route }) => {
     const fetchCourses = async (courseTeaching) => {
         try {
             const coursePromises = courseTeaching.map(async (course) => {
-                const courseRef = ref(database, `Courses/${course.courseID}`); // Đường dẫn tới course ID
+                const courseRef = ref(database, `Courses/${course.courseID-1}`); // Đường dẫn tới id của courses
                 const snapshot = await get(courseRef);
 
                 if (snapshot.exists()) {
@@ -199,7 +199,7 @@ const TeacherProfile = ({ navigation, route }) => {
                 {/* Teacher Info */}
                 <View style={styles.teacherInfo}>
                     <Image
-                        source={{ uri: teacher.image.url }} // Replace with teacher profile image
+                        source={{ uri: teacher.image.url }} 
                         style={styles.teacherAvatar}
                     />
                     <Text style={styles.teacherName}>{teacher.name}</Text>

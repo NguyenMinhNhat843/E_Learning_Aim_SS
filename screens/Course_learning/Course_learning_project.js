@@ -1,64 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUpload, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-
-// render item project
-const data_project = [
-    {
-        id: 1,
-        image_project: require('../../assets/image/course_info/banner.jpg'),
-        name_project: 'wireframe',
-        author: 'John Doe',
-    },
-    {
-        id: 2,
-        image_project: require('../../assets/image/course_info/banner.jpg'),
-        name_project: 'wireframe',
-        author: 'John Doe',
-    },
-    {
-        id: 3,
-        image_project: require('../../assets/image/course_info/banner.jpg'),
-        name_project: 'wireframe',
-        author: 'John Doe',
-    },
-    {
-        id: 4,
-        image_project: require('../../assets/image/course_info/banner.jpg'),
-        name_project: 'wireframe',
-        author: 'John Doe',
-    },
-];
-
-// Render item project
-const Render_item_project = ({ item }) => {
-    return (
-        <View style={styles.project_item}>
-            <Image source={item.image_project} style={{ width: 200, height: 100, borderRadius: 16 }} />
-            <Text style={{ paddingTop: 8, paddingBottom: 8, fontSize: 18 }}>{item.name_project}</Text>
-            <Text style={{ color: '#333' }}>{item.author}</Text>
-        </View>
-    );
-};
+import { useUser } from '../Login_Logout/UserContext';
+import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
+import { ref, get, onValue } from 'firebase/database';
 
 // render item resource
 const data_resource = [
     {
         id: 1,
-        name_resource: 'wireframe.txt',
+        name_resource: 'Text1.txt',
         file_size: '1.2MB',
     },
     {
         id: 2,
-        name_resource: 'wireframe.txt',
-        file_size: '1.2MB',
+        name_resource: 'Text2.txt',
+        file_size: '1.4MB',
     },
     {
         id: 3,
-        name_resource: 'wireframe.txt',
-        file_size: '1.2MB',
+        name_resource: 'Text3.txt',
+        file_size: '2.6MB',
     },
 ];
 
@@ -88,14 +52,69 @@ const ReadMoreText = ({ text, maxLength }) => {
         <View>
             <Text style={styles.text}>{showMore ? text : `${text.slice(0, maxLength)}...`}</Text>
             <TouchableOpacity onPress={toggleShowMore}>
-                <Text style={{ color: 'cyan' }}>{showMore ? 'See less' : 'See more'}</Text>
+                <Text style={{ color: '#007BFF' }}>{showMore ? 'See less' : 'See more'}</Text>
             </TouchableOpacity>
         </View>
     );
 };
 
-// Đổi tên component thành PascalCase
-const CourseInfoProject = () => {
+const Course_learning_project = ({ course }) => {
+    const { user } = useUser();
+    const [projects, setProjects] = useState([]);
+    const [projectNumber, setProjectNumber] = useState(0); // Store project number
+
+    useEffect(() => {
+        const fetchProjects = async (userID, courseID) => {
+            try {
+                const projectsRef = ref(database, 'Projects'); // Trỏ đến nhánh Projects trong Firebase
+                const snapshot = await get(projectsRef);
+
+                if (snapshot.exists()) {
+                    // Chuyển đổi object thành mảng và lọc theo userID và courseID
+                    const allProjects = Object.values(snapshot.val());
+                    const filteredProjects = allProjects.filter(
+                        (project) => project.userID === userID && project.courseID === courseID
+                    );
+                    setProjects(filteredProjects);
+                    setProjectNumber(filteredProjects.length); // Set the project number here
+                } else {
+                    setProjects([]);
+                    setProjectNumber(0); // If no projects, set number to 0
+                }
+            } catch (error) {
+                console.error('Lỗi khi fetch dữ liệu Projects:', error);
+            }
+        };
+
+        if (user && course) {
+            const userID = user.id;
+            const courseID = course.id;
+
+            if (!userID || !courseID) {
+                console.error('UserID hoặc CourseID không tồn tại');
+                setProjects([]);
+                setProjectNumber(0); // If no valid user/course, set project number to 0
+                return;
+            }
+
+            fetchProjects(userID, courseID);
+        } else {
+            setProjects([]);
+            setProjectNumber(0); // If no user or course, reset project number
+        }
+    }, [user, course]);
+
+    // Render item project
+    const Render_item_project = ({ item }) => {
+        return (
+            <View style={styles.project_item}>
+                <Image source={{uri: item.image}} style={{ width: 200, height: 100, borderRadius: 16 }} />
+                <Text style={{ paddingTop: 8, paddingBottom: 8, fontSize: 18 }}>{item.name}</Text>
+                <Text style={{ color: '#333' }}>{item.author}</Text>
+            </View>
+        );
+    };
+
     const project_description_full_text =
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quo ad praesentium quod omnis nam nisi ducimus aliquam totam quas accusamus eveniet reprehenderit, iste commodi sequi doloremque dolorum pariatur. Accusantium.';
 
@@ -104,20 +123,20 @@ const CourseInfoProject = () => {
             <View>
                 <Text style={{ fontWeight: 'bold', fontSize: 24 }}>Upload your project</Text>
                 <TouchableOpacity style={styles.button_up_project}>
-                    <FontAwesomeIcon style={{ color: 'cyan', width: 24, height: 24 }} icon={faUpload} />
+                    <FontAwesomeIcon style={{ color: '#007BFF', width: 24, height: 24 }} icon={faUpload} />
                     <Text style={styles.buttonText}>Upload your project here</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.student_project}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 24 }}>12 Student Project</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 24 }}>{projectNumber} Project</Text>
                     <TouchableOpacity>
-                        <Text style={{ fontSize: 16, color: 'cyan' }}>View more</Text>
+                        <Text style={{ fontSize: 16, color: '#007BFF' }}>View more</Text>
                     </TouchableOpacity>
                 </View>
                 {/* student project section */}
                 <FlatList
-                    data={data_project}
+                    data={projects}
                     renderItem={({ item }) => <Render_item_project item={item} />}
                     keyExtractor={(item) => item.id.toString()} // Convert to string
                     horizontal={true}
@@ -142,8 +161,7 @@ const CourseInfoProject = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-    },
+    container: {},
     button_up_project: {
         backgroundColor: '#F0F0F0',
         padding: 15,
@@ -152,7 +170,7 @@ const styles = StyleSheet.create({
         borderColor: '#CCCCCC',
         marginTop: 10,
         borderStyle: 'dashed',
-        borderColor: 'cyan',
+        borderColor: '#007BFF',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -185,4 +203,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CourseInfoProject; 
+export default Course_learning_project;

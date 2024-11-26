@@ -35,13 +35,14 @@ const Course_learning_main = ({ navigation,route }) => {
     // Hàm fetch chi tiết khóa học từ `Courses`
     const fetchCourseDetails = async (courseID) => {
         try {
-            const courseRef = ref(database, `Courses/${courseID}`);
+            const courseRef = ref(database, `Courses/${courseID - 1}`); // Truy vấn theo khóa học có id = courseID
             const snapshot = await get(courseRef);
-
+    
             if (snapshot.exists()) {
+                // Sử dụng courseID để đảm bảo ID đúng
                 setCourse({
-                    id: snapshot.key,
-                    ...snapshot.val(),
+                    id: courseID, // Sử dụng courseID làm id thực tế
+                    ...snapshot.val(), // Thêm các trường dữ liệu khác từ Firebase
                 });
             } else {
                 console.error('Khóa học không tồn tại trong bảng Courses.');
@@ -118,7 +119,7 @@ const Course_learning_main = ({ navigation,route }) => {
                 </View>
 
                 {/* Tab Q&A */}
-                {tabSelected === 'Q&A' ? <Course_info_QA /> : tabSelected === 'PROJECT' ? <Course_info_project /> : <Lesson_Tab />}
+                {tabSelected === 'Q&A' ? <Course_info_QA course={course} /> : tabSelected === 'PROJECT' ? <Course_info_project course={course}/> : <Lesson_Tab />}
             </View>
         </ScrollView>
     );
@@ -202,9 +203,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     tab_active: {
-        color: 'cyan',
+        color: '#007BFF',
         borderBottomWidth: 4,
-        borderBottomColor: 'cyan',
+        borderBottomColor: '#007BFF',
     },
 });
 

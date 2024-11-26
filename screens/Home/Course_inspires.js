@@ -33,11 +33,12 @@ const Course_inspires = ({ navigation }) => {
     };
 
     useEffect(() => {
-        fetchCourses();  // Gọi hàm fetch khi component mount
+        fetchCourses(); 
     }, []);
 
+
     const Render_item_course = ({ item }) => {
-        if (item.status === "Inspires") {
+        if (item.status === "") {
             const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
             const handleBookMark = () => {
                 setIsBookMark(!isBookMark);
@@ -50,12 +51,8 @@ const Course_inspires = ({ navigation }) => {
 
             return (
                 <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView",{courses:item})}>
-                    {/* image course */}
                     <Image source={{ uri: item.image.url }} style={styles.course_item_image} />
-
-                    {/* info course */}
                     <View style={styles.info_course}>
-                        {/* name    teacherName  boormark */}
                         <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
                             <View>
                                 <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>

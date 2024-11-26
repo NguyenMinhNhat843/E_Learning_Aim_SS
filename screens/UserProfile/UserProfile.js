@@ -55,9 +55,27 @@ const UserProfile = ({ navigation }) => {
     useEffect(() => {
         if (user.course_learning) {
             fetchCourses(user.course_learning);
+            calculateCourseStats(user.course_learning);
         }
     }, [user]);
 
+    //Tính toán số lượng khóa học
+     const [totalCourses, setTotalCourses] = useState(0);
+     const [ongoingCourses, setOngoingCourses] = useState(0);
+     const [completedCourses, setCompletedCourses] = useState(0);
+
+    const calculateCourseStats = (courseLearning) => {
+        const total = courseLearning.length;
+        const completed = courseLearning.filter(course => course.progress === 1).length;
+        const ongoing = courseLearning.filter(course => course.progress > 0 && course.progress < 1).length;
+
+        setTotalCourses(total);
+        setCompletedCourses(completed);
+        setOngoingCourses(ongoing);
+    };
+
+
+    // Hàm render mỗi item trong danh sách khóa học
     const renderCourseItem = ({ item }) => (
         <View style={styles.courseItem} onPress={() => navigation.navigate("CourseDetails_OverView")}>
             <Image source={{ uri: item.image.url }} style={styles.courseImage} />
@@ -96,15 +114,15 @@ const UserProfile = ({ navigation }) => {
 
                 <View style={styles.profileStats}>
                     <View style={styles.statItem}>
-                        <Text style={styles.statNumber}>5</Text>
+                        <Text style={styles.statNumber}>{totalCourses}</Text>
                         <Text style={styles.statLabel}>Save</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statNumber}>3</Text>
+                        <Text style={styles.statNumber}>{ongoingCourses}</Text>
                         <Text style={styles.statLabel}>On Going</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statNumber}>2</Text>
+                        <Text style={styles.statNumber}>{completedCourses}</Text>
                         <Text style={styles.statLabel}>Completed</Text>
                     </View>
                 </View>
