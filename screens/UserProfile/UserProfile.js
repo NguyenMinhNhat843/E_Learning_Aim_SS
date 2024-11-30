@@ -11,6 +11,11 @@ import { useUser } from '../Login_Logout/UserContext';
 const UserProfile = ({ navigation }) => {
     const { user } = useUser(); // Lấy thông tin người dùng từ context
 
+    //Tính toán số lượng khóa học
+    const [totalCourses, setTotalCourses] = useState(0);
+    const [ongoingCourses, setOngoingCourses] = useState(0);
+    const [completedCourses, setCompletedCourses] = useState(0);
+
     // Hàm xử lý đăng xuất
     const handleLogout = async () => {
         try {
@@ -46,21 +51,22 @@ const UserProfile = ({ navigation }) => {
             });
 
             const fetchedCourses = await Promise.all(coursePromises);
+
+            // const onGoing = fetchedCourses.filter((course) => course.progress === 1).length;
+            // const completed = fetchedCourses.filter((course) => course.progress > 0 && course.progress < 1).length;
+
+            // setOngoingCourses(onGoing);
+            // setCompletedCourses(completed);
             setCourses(fetchedCourses.filter((course) => course !== null)); // Loại bỏ giá trị null
         } catch (error) {
             console.error('Lỗi khi fetch dữ liệu khóa học:', error);
         }
     };
 
-    //Tính toán số lượng khóa học
-     const [totalCourses, setTotalCourses] = useState(0);
-     const [ongoingCourses, setOngoingCourses] = useState(0);
-     const [completedCourses, setCompletedCourses] = useState(0);
-
     const calculateCourseStats = (courseLearning) => {
         const total = courseLearning.length;
         const completed = courseLearning.filter(course => course.progress === 1).length;
-        const ongoing = courseLearning.filter(course => course.progress > 0 && course.progress < 1).length;
+        const ongoing = courseLearning.filter(course => course.progress >= 0 && course.progress < 1).length;
 
         setTotalCourses(total);
         setCompletedCourses(completed);
@@ -88,6 +94,7 @@ const UserProfile = ({ navigation }) => {
         if (user.course_learning) {
             fetchCourses(user.course_learning);
             calculateCourseStats(user.course_learning);
+
         }
     }, [user.course_learning]);
 

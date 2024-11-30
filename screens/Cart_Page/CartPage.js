@@ -39,7 +39,7 @@ const CartScreen = ({ route }) => {
     
                 // Cập nhật course_learning của người dùng với các khóa học trong giỏ hàng
                 const newCourses = cartItems.map(item => ({
-                    courseID: item.id,  // ID khóa học
+                    courseID: String(parseInt(item.id) - 1),  // ID khóa học
                     image: item.image.url,  // URL ảnh
                     name: item.name,  // Tên khóa học
                     progress: 0,  // Mới thanh toán, bắt đầu từ 0
