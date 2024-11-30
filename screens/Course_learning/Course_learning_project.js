@@ -161,7 +161,10 @@ const Course_learning_project = ({ course }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {},
+    container: {
+        backgroundColor: '#fff',
+        padding: 16,
+    },
     button_up_project: {
         backgroundColor: '#F0F0F0',
         padding: 15,

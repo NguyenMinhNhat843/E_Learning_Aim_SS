@@ -22,8 +22,12 @@ const Course_inspires = ({ navigation }) => {
                     id: key, // Lấy key làm id
                     ...snapshot.val()[key], // Thêm dữ liệu từ nút con
                 }));
-                console.log("Dữ liệu khóa học từ Firebase:", coursesData);
-                setCourses(coursesData);  // Lưu dữ liệu vào state
+
+                // Lọc các khóa học có status là "inpires"
+                const filteredCourses = coursesData.filter(course => course.status === 'inspires');
+
+                console.log("Dữ liệu khóa học với status 'inpires' từ Firebase:", filteredCourses);
+                setCourses(filteredCourses);  // Lưu dữ liệu đã lọc vào state
             } else {
                 console.log('Không có dữ liệu');
             }
@@ -33,59 +37,58 @@ const Course_inspires = ({ navigation }) => {
     };
 
     useEffect(() => {
-        fetchCourses(); 
+        fetchCourses();
     }, []);
 
 
+
     const Render_item_course = ({ item }) => {
-        if (item.status === "") {
-            const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
-            const handleBookMark = () => {
-                setIsBookMark(!isBookMark);
-            };
+        const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
+        const handleBookMark = () => {
+            setIsBookMark(!isBookMark);
+        };
 
-            const [isStar, setIsStar] = React.useState(false);
-            const handleStar = () => {
-                setIsStar(!isStar);
-            };
+        const [isStar, setIsStar] = React.useState(false);
+        const handleStar = () => {
+            setIsStar(!isStar);
+        };
 
-            return (
-                <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView",{courses:item})}>
-                    <Image source={{ uri: item.image.url }} style={styles.course_item_image} />
-                    <View style={styles.info_course}>
-                        <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
-                                <Text style={{ color: '#333' }}>{item.teacherName}</Text>
-                            </View>
-                            <TouchableOpacity onPress={handleBookMark}>
-                                {isBookMark ? (
-                                    <FontAwesomeIcon style={{ paddingTop: 8, height: '100%', width: 18 }} icon={solidBookMark} />
-                                ) : (
-                                    <FontAwesomeIcon style={{ paddingTop: 8, height: '100%', width: 18 }} icon={faBookmark} />
-                                )}
-                            </TouchableOpacity>
+        return (
+            <TouchableOpacity style={styles.course_item} onPress={() => navigation.navigate("CourseDetails_OverView", { courses: item })}>
+                <Image source={{ uri: item.image.url }} style={styles.course_item_image} />
+                <View style={styles.info_course}>
+                    <View style={{ flexDirection: 'row', paddingTop: 8, paddingBottom: 8, justifyContent: 'space-between' }}>
+                        <View>
+                            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.name}</Text>
+                            <Text style={{ color: '#333' }}>{item.teacherName}</Text>
                         </View>
-                        {/* price */}
-                        <Text style={{ color: '#007BFF', fontWeight: 'bold' }}>${item.price}</Text>
-                        {/* rank      lessons number */}
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <TouchableOpacity onPress={handleStar}>
-                                {isStar ? (
-                                    <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
-                                ) : (
-                                    <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
-                                )}
-                            </TouchableOpacity>
-                            <Text style={{ paddingRight: 16 }}>
-                                {item.rank} ({item.countLean})
-                            </Text>
-                            <Text>{item.lessons} lessons</Text>
-                        </View>
+                        <TouchableOpacity onPress={handleBookMark}>
+                            {isBookMark ? (
+                                <FontAwesomeIcon style={{ paddingTop: 8, height: '100%', width: 18 }} icon={solidBookMark} />
+                            ) : (
+                                <FontAwesomeIcon style={{ paddingTop: 8, height: '100%', width: 18 }} icon={faBookmark} />
+                            )}
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
-            );
-        }
+                    {/* price */}
+                    <Text style={{ color: '#007BFF', fontWeight: 'bold' }}>${item.price}</Text>
+                    {/* rank      lessons number */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={handleStar}>
+                            {isStar ? (
+                                <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={solidStar} onPress={handleStar} />
+                            ) : (
+                                <FontAwesomeIcon style={{ paddingRight: 8, color: 'orange' }} icon={faStar} onPress={handleStar} />
+                            )}
+                        </TouchableOpacity>
+                        <Text style={{ paddingRight: 16 }}>
+                            {item.rank} ({item.countLean})
+                        </Text>
+                        <Text>{item.lessons} lessons</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
     };
 
     return (

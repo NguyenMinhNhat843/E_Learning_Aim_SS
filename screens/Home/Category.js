@@ -1,13 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
-const Category = () => {
-    const navigation = useNavigation();
-    const handleCategory = (name_category) => {
-        navigation.navigate('Search', { nameCategory: name_category });
-    };
-
+const icon_category = [
+    { id: 1, name: 'Business', color: '#1abc9c', icon: '📊' },
+    { id: 2, name: 'Design', color: '#9b59b6', icon: '✏️' },
+    { id: 3, name: 'Code', color: '#e74c3c', icon: '💻' },
+    { id: 4, name: 'Writing', color: '#3498db', icon: '📄' },
+    { id: 5, name: 'Movie', color: '#8e44ad', icon: '🎬' },
+    { id: 6, name: 'Language', color: '#e67e22', icon: '🌍' },
+];
+const Category = ({ navigation }) => {
     return (
         <View style={styles.category_container}>
             <View style={styles.category_header}>
@@ -17,18 +19,19 @@ const Category = () => {
                 </TouchableOpacity>
             </View>
             {/* Hiển thị danh mục dưới dạng lưới */}
-            {/* <View style={styles.grid}>
-                {data_category.map((category) => (
-                    <TouchableOpacity key={category.id} style={[styles.categoryItem]} onPress={() => handleCategory(category.name)}>
+            <View style={styles.grid}>
+                {icon_category.map((category) => (
+                    <TouchableOpacity key={category.id} style={[styles.categoryItem]} 
+                        onPress={() => navigation.navigate('Category Detail', {categoryName: category.name})}
+                    >
                         <Text style={styles.icon}>{category.icon}</Text>
                         <Text style={styles.categoryText}>{category.name}</Text>
                     </TouchableOpacity>
                 ))}
-            </View> */}
+            </View>
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     category_container: {
         padding: 16,
@@ -66,5 +69,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
 export default Category;

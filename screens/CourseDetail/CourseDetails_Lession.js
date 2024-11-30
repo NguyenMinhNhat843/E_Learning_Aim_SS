@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, Button, TouchableOpacity, FlatList } from 'react-native';
-import { Video } from 'expo-av';
 import { FontAwesome } from '@expo/vector-icons'; // To use lock and play icons
-import { Ionicons } from '@expo/vector-icons';
-import { ref, get } from 'firebase/database';
-import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
-import { useRoute } from '@react-navigation/native';
 
 const CourseDetailsWithLessons = ({ course }) => {
     console.log('lessonGroups:', JSON.stringify(course.lessonGroup, null, 4));
@@ -17,8 +12,10 @@ const CourseDetailsWithLessons = ({ course }) => {
 
     const renderLessonItem = ({ item }) => (
         <View style={styles.lessonItem}>
-            <Text style={styles.lessonTitle}>{item.title}</Text>
-            <Text style={styles.lessonDuration}>{item.time}</Text>
+            <View style={styles.lessonItemView}>
+                <Text style={styles.lessonTitle}>{item.lesson_name}</Text>
+                <Text style={styles.lessonDuration}>{item.time}</Text>
+            </View>
             {item.state ? <FontAwesome name="lock" size={20} color="gray" /> : <FontAwesome name="play-circle" size={20} color="#007BFF" />}
         </View>
     );
@@ -55,73 +52,6 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#fff',
     },
-
-    headerBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 40,
-        padding: 10,
-        marginLeft: -10,
-        marginRight: -10,
-        backgroundColor: '#f8f8f8',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    iconButton: {
-        padding: 5,
-    },
-
-    subContainer: {
-        flex: 1,
-        // padding: 10,
-        backgroundColor: '#fff',
-    },
-
-    header: {
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-
-    video: {
-        width: '100%',
-        height: 200,
-        borderRadius: 10,
-    },
-
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginTop: 10,
-    },
-    subText: {
-        fontSize: 24,
-        color: 'gray',
-    },
-    tabBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginBottom: 20,
-    },
-    tab: {
-        paddingBottom: 10,
-    },
-    tabText: {
-        fontSize: 16,
-        color: 'gray',
-    },
-    activeTab: {
-        borderBottomWidth: 2,
-        borderBottomColor: '#007BFF',
-    },
-    activeTabText: {
-        color: '#007BFF',
-        fontWeight: 'bold',
-    },
     lessonGroupHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -144,47 +74,16 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#e0e0e0',
     },
+    lessonItemView:{
+        flexDirection: 'row',justifyContent:'space-between', width:'95%'
+    },
     lessonTitle: {
-        fontSize: 14,
+        fontSize: 16,
+        fontweight: 'bold',
     },
     lessonDuration: {
         fontSize: 12,
         color: 'gray',
-    },
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#f3f3f3',
-        // marginTop: 20,
-        marginRight: -20,
-        marginLeft: -20,
-        marginBottom: -10,
-        padding: 20,
-        borderColor: '#9bc1e0',
-        borderTopWidth: 1,
-    },
-    price: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginLeft: 10,
-    },
-
-    discount: {
-        color: '#79828b',
-        fontSize: 14,
-        marginLeft: 10,
-    },
-
-    addToCartButton: {
-        backgroundColor: '#007BFF',
-        padding: 15,
-        borderRadius: 15,
-        marginRight: 10,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
     },
 });
 

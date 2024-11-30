@@ -22,39 +22,27 @@ import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới
 const data_hot_topics = [
     {
         id: 1,
-        title: 'Python',
+        title: 'Python Web',
     },
     {
         id: 2,
-        title: 'Java',
+        title: 'Java OOP',
     },
     {
         id: 3,
-        title: 'Design',
+        title: 'Website Design',
     },
     {
         id: 4,
-        title: 'AI',
-    },
-    {
-        id: 5,
-        title: 'JS',
-    },
-    {
-        id: 6,
-        title: 'React',
-    },
-    {
-        id: 7,
-        title: 'test',
-    },
+        title: 'ReactNative Mobile',
+    }
 ];
 
 const data_category = [
     {
         id: 1,
         icon: <FontAwesomeIcon icon={faBusinessTime} />,
-        name: 'Bussiness',
+        name: 'Business',
     },
     {
         id: 2,
@@ -94,13 +82,13 @@ const Search_page = ({ navigation }) => {
             const snapshot = await get(coursesRef);
             if (snapshot.exists()) {
                 const data = snapshot.val();
-                // Firebase trả về dạng object, bạn cần chuyển thành array nếu cần
+                // Firebase trả về dạng object
                 const coursesArray = Object.entries(data).map(([id, value]) => ({
                     id,
                     ...value,
                 }));
                 setCourses(coursesArray); // Cập nhật state
-                console.log('Data available:', JSON.stringify(coursesArray.splice(0, 1), null, 4));
+                // console.log('Data available:', JSON.stringify(coursesArray.splice(0, 1), null, 4));
             } else {
                 console.log('No data available');
             }
@@ -146,13 +134,73 @@ const Search_page = ({ navigation }) => {
     // ======================= show all ========================
     const [showAllCategory, setShowAllCategory] = useState(false);
 
+    // ======================= hot topics ========================
+
+    const [topic, setTopic] = useState(null);
+    const [coursesTopic, setCoursesTopic] = useState(null);
+    const fetchCourseByTopic = async (selectedTopic) => {
+        try {
+            const courseRef = ref(database, 'Courses');
+            const snapshot = await get(courseRef);
+            if (snapshot.exists()) {
+                const courses = snapshot.val();
+                const matchingCourses = Object.keys(courses)
+                    .filter((id) => courses[id].name === selectedTopic) // Điều kiện lọc theo category
+                    .map((id) => ({
+                        id: id,
+                        ...courses[id],
+                    }));
+    
+                if (matchingCourses.length > 0) {
+                    // Trả về đối tượng đầu tiên trong mảng nếu có kết quả
+                    const courseObject = matchingCourses[0]; // Lấy khóa học đầu tiên nếu có
+                    setCoursesTopic(courseObject); // Cập nhật state với một đối tượng khóa học
+                    // console.log(`Course found for topic: ${selectedTopic}`, courseObject);
+                } else {
+                    console.log(`No courses found for topic: ${selectedTopic}`);
+                    setCoursesTopic(null); // Không tìm thấy khóa học, có thể trả về null
+                }
+            } else {
+                console.warn('No data found in Firebase.');
+                setCoursesTopic(null); // Nếu không có dữ liệu từ Firebase
+            }
+        } catch (error) {
+            console.error('Error fetching courses:', error);
+        }
+    };
+    
+
+    // ======================= search topics ========================
+    const handleTopicSelect = (selectedTopic) => {
+        setTopic(selectedTopic); // Cập nhật topic
+        console.log('Topic selected:', selectedTopic);
+    };
+
+    // ======================= useEffect cho chủ đề ========================
+    useEffect(() => {
+        if (topic) {
+            console.log('Topic changed:', topic);
+            fetchCourseByTopic(topic); // Gọi hàm fetchCourseByTopic khi topic thay đổi
+        }else
+            console.log('No topic selected');
+    }, [topic]); // Trigger lại khi topic thay đổi
+
+    useEffect(() => {
+        // Chỉ điều hướng khi courseTopic có dữ liệu
+        if (coursesTopic && topic) {
+            navigation.navigate('CourseDetails_OverView', { courses: coursesTopic });
+        }else
+            console.log('No searchTopics available');
+    }, [coursesTopic]);
+
+
     return (
         <View style={styles.container}>
             {/* search input section */}
             <View style={styles.search_section}>
-                <TouchableOpacity onPress={() => setSearchResultView(false)}>
+                {/* <TouchableOpacity onPress={() => setSearchResultView(false)}>
                     <FontAwesomeIcon size={25} icon={faChevronLeft} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <View style={styles.search_input}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <TextInput
@@ -185,7 +233,7 @@ const Search_page = ({ navigation }) => {
                                             // { backgroundColor: searchTopics.includes(item.title) ? 'cyan' : 'white' },
                                         ]}
                                         key={index}
-                                        onPress={() => saveTopics(item.title)}
+                                        onPress={() => handleTopicSelect(item.title)}
                                     >
                                         <Text>{item.title}</Text>
                                     </TouchableOpacity>
@@ -198,12 +246,12 @@ const Search_page = ({ navigation }) => {
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Category</Text>
                                 <TouchableOpacity onPress={() => setShowAllCategory(!showAllCategory)}>
-                                    <Text style={{ color: 'cyan' }}>{showAllCategory ? 'View less' : 'View more'}</Text>
+                                    <Text style={{ color: '#007BFF' }}>{showAllCategory ? 'View less' : 'View more'}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ paddingTop: 16 }}>
                                 <FlatList
-                                    data={showAllCategory ? data_category : data_category.slice(0, 3)}
+                                    data={showAllCategory ? data_category : data_category.slice(0, 6)}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity style={styles.category_item} onPress={() => searchByCategory(item.name)}>
                                             <View style={{ padding: 8 }}>{item.icon}</View>

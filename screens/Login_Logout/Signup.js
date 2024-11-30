@@ -27,6 +27,7 @@ const Signup = () => {
         if (phone && fullName && technique && userName && password) {
             const newUserId = new Date().getTime().toString();  // Tạo ID người dùng (có thể dùng cách khác)
             const newUser = {
+                id: newUserId,
                 phone,
                 name: fullName,
                 technique,

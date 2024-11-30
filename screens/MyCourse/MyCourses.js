@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Footer from '../Home/Footer';
 import { useUser } from '../Login_Logout/UserContext';
@@ -9,19 +9,20 @@ const MyCourses = ({ navigation, route }) => {
     const { user } = useUser(); // Lấy thông tin người dùng từ context
 
     const [selectedTab, setSelectedTab] = useState('ALL');
+    const [courses, setCourses] = useState(user.course_learning || []); // Dùng useState để lưu khóa học
 
     // Hàm lọc các khóa học theo trạng thái (ALL, ON GOING, COMPLETED)
     const filterCourses = () => {
         if (selectedTab === 'ALL') {
-            return user.course_learning;
+            return courses;
         }
         if (selectedTab === 'ON GOING') {
-            return user.course_learning.filter(course => course.progress < 1);
+            return courses.filter(course => course.progress < 1);
         }
         if (selectedTab === 'COMPLETED') {
-            return user.course_learning.filter(course => course.progress === 1);
+            return courses.filter(course => course.progress === 1);
         }
-        return user.course_learning;
+        return courses;
     };
 
     const handleTabPress = (tab) => {
@@ -40,6 +41,14 @@ const MyCourses = ({ navigation, route }) => {
             </View>
         </TouchableOpacity>
     );
+
+    // Cập nhật lại khóa học khi user.course_learning thay đổi
+    useEffect(() => {
+        if (user.course_learning) {
+            setCourses(user.course_learning); // Cập nhật lại danh sách khóa học
+        }
+    }, [user.course_learning]); // Mỗi khi course_learning thay đổi
+
 
     return (
         <View style={styles.container}>
@@ -94,6 +103,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
         paddingHorizontal: 16,
+        backgroundColor: '#f8f8f8',
     },
     bannerContainer: {
         paddingHorizontal: 16,

@@ -6,7 +6,7 @@ import { faBookmark as solidBookMark } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { ref, get } from 'firebase/database';
-import { database } from '../../firebaseConfig';  // Import cấu hình Firebase 
+import { database } from '../../firebaseConfig';  // Import cấu hình Firebase
 
 
 const Popular_course = ({ navigation }) => {

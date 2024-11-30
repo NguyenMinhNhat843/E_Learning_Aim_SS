@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const Render_item_course = ({ item }) => {
     const navigation = useNavigation();
-    // xử lý đánh dấu sách
+    // xử lý đánh dấu
     const [isBookMark, setIsBookMark] = React.useState(item.isBookMark);
     const handleBookMark = () => {
         setIsBookMark(!isBookMark);
@@ -43,7 +43,7 @@ const Render_item_course = ({ item }) => {
                     </TouchableOpacity>
                 </View>
                 {/* price */}
-                <Text style={{ color: 'cyan', fontWeight: 'bold' }}>${item.price}</Text>
+                <Text style={{ color: '#007BFF', fontWeight: 'bold' }}>${item.price}</Text>
                 {/* rating lessons number */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <TouchableOpacity onPress={handleStar}>

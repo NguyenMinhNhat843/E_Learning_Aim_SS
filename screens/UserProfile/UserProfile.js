@@ -52,13 +52,6 @@ const UserProfile = ({ navigation }) => {
         }
     };
 
-    useEffect(() => {
-        if (user.course_learning) {
-            fetchCourses(user.course_learning);
-            calculateCourseStats(user.course_learning);
-        }
-    }, [user]);
-
     //Tính toán số lượng khóa học
      const [totalCourses, setTotalCourses] = useState(0);
      const [ongoingCourses, setOngoingCourses] = useState(0);
@@ -90,6 +83,13 @@ const UserProfile = ({ navigation }) => {
             <FontAwesome name="bookmark-o" size={24} color="gray" />
         </View>
     );
+
+    useEffect(() => {
+        if (user.course_learning) {
+            fetchCourses(user.course_learning);
+            calculateCourseStats(user.course_learning);
+        }
+    }, [user.course_learning]);
 
     return (
         <View style={styles.container}>

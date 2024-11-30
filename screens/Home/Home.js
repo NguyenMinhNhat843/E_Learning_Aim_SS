@@ -21,13 +21,13 @@ const Home = ({ navigation }) => {
             <View style={styles.header}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 32, color: 'white', flex: 1 }}>Hello Roise</Text>
-                    <TouchableOpacity onPress={changeToCartPage}>
-                        <FontAwesomeIcon style={{ color: 'white', paddingRight: 46, height: '100%', width: 24 }} icon={faCartShopping} />
+                    <TouchableOpacity onPress={changeToCartPage} style={{backgroundColor:'#156892', padding:10, marginRight: 10}}>
+                        <FontAwesomeIcon style={{ color: 'white', paddingRight: 50 }} size={30} icon={faCartShopping} />
                     </TouchableOpacity>
-                    <FontAwesomeIcon style={{ color: 'white', paddingRight: 16, height: '100%', width: 24 }} icon={faBell} />
+                    <FontAwesomeIcon style={{ color: 'white', paddingRight: 16 }} size={30} icon={faBell} />
                 </View>
                 <View>
-                    <Text style={{ color: 'white', paddingTop: 8 }}>What do you learn to day?</Text>
+                    <Text style={{ color: 'white', paddingTop: 8, fontWeight:700 }}>What do you learn to day?</Text>
                 </View>
             </View>
             <ScrollView style={styles.scrollContent}>
@@ -44,16 +44,12 @@ const Home = ({ navigation }) => {
                         </View>
                     </View>
 
-                    {/* Category section */}
-                    <Category />
+                    <Category navigation={navigation}/>
 
-                    {/* popular course */}
                     <Popular_course navigation={navigation} />
 
-                    {/* recommend course */}
                     <Recomment_course navigation={navigation} />
 
-                    {/* course inspires */}
                     <Course_inspires navigation={navigation} />
 
                     {/* top teacher */}
@@ -74,8 +70,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        height: 125,
-        backgroundColor: 'cyan',
+        height: 145,
+        backgroundColor: '#23547f',
         paddingTop: 40,
         paddingHorizontal: 16,
         paddingBottom: 16,
@@ -101,7 +97,7 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
     },
     button_banner: {
-        backgroundColor: 'cyan',
+        backgroundColor: '#007BFF',
         paddingTop: 8,
         paddingBottom: 8,
         paddingLeft: 16,

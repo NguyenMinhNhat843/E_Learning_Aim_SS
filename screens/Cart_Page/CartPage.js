@@ -1,14 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { CartContext } from '../../context/CartContext';
 import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../Login_Logout/UserContext';
+import { ref, get, update } from 'firebase/database';
+import { database } from '../../firebaseConfig'; // Cập nhật đúng đường dẫn đến file firebaseConfig của bạn
+
 
 const CartScreen = ({ route }) => {
+    const { user } = useUser(); // Lấy thông tin người dùng từ context
+
     // lấy item giỏ hàng từ context
-    const { cartItems } = useContext(CartContext);
-    console.log(cartItems);
+    const { cartItems, removeItem, setCartItems } = useContext(CartContext);
+    // console.log(cartItems);
 
     // navigation
     const navigation = useNavigation();
@@ -17,19 +23,79 @@ const CartScreen = ({ route }) => {
     const getTotalPrice = () => cartItems.reduce((total, item) => total + item.price, 0);
 
     // xử lý thanh toán
-    const handleCheckout = () => {
-        Alert.alert('Thanh toán', 'Bạn đã tiến hành thanh toán thành công!');
+    const handleCheckout = async () => {
+        if (!user || !cartItems || cartItems.length === 0) {
+            Alert.alert('Lỗi', 'Giỏ hàng trống hoặc không tìm thấy người dùng!');
+            return;
+        }
+    
+        try {
+            // Lấy thông tin người dùng từ Firebase
+            const userRef = ref(database, `Users/${user.id}`);
+            const userSnapshot = await get(userRef);
+    
+            if (userSnapshot.exists()) {
+                const userData = userSnapshot.val();
+    
+                // Cập nhật course_learning của người dùng với các khóa học trong giỏ hàng
+                const newCourses = cartItems.map(item => ({
+                    courseID: item.id,  // ID khóa học
+                    image: item.image.url,  // URL ảnh
+                    name: item.name,  // Tên khóa học
+                    progress: 0,  // Mới thanh toán, bắt đầu từ 0
+                    time: item.time || '0 mins'  // Thời gian khóa học
+                }));
+    
+                // Cập nhật lại danh sách khóa học học của người dùng
+                const updatedCourses = [...userData.course_learning, ...newCourses];
+    
+                // Cập nhật dữ liệu người dùng vào Firebase
+                await update(userRef, {
+                    course_learning: updatedCourses
+                });
+    
+                // Xóa các sản phẩm trong giỏ hàng
+                setCartItems([]);  // Xóa giỏ hàng
+    
+                // Thông báo thanh toán thành công
+                Alert.alert('Thanh toán thành công', 'Khóa học đã được thêm vào danh sách học của bạn!');
+            } else {
+                Alert.alert('Lỗi', 'Không tìm thấy người dùng!');
+            }
+        } catch (error) {
+            Alert.alert('Lỗi', 'Có lỗi xảy ra trong quá trình thanh toán!');
+            console.error(error);
+        }
     };
 
-    // render item
+    // Xử lý xóa item
+    const handleRemoveItem = (itemId) => {
+        // Cảnh báo trước khi xóa item
+        Alert.alert(
+            'Xóa sản phẩm',
+            'Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?',
+            [
+                { text: 'Hủy', style: 'cancel' },
+                { text: 'Xóa', onPress: () => removeItem(itemId) },  // Gọi hàm removeItem để xóa
+            ]
+        );
+    };
+
+    //render item
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.itemContainer}>
+        <View style={styles.itemContainer}>
             <Image source={{ uri: item.image.url }} style={styles.image} />
             <View style={styles.details}>
                 <Text style={styles.name}>{item.name}</Text>
                 <Text style={styles.price}>${item.price}</Text>
             </View>
-        </TouchableOpacity>
+            <TouchableOpacity 
+                style={styles.removeButton} 
+                onPress={() => handleRemoveItem(item.id)} // Gọi hàm xóa
+            >
+                <FontAwesomeIcon icon={faTrashAlt} size={20} color="red" />
+            </TouchableOpacity>
+        </View>
     );
 
     return (
@@ -98,6 +164,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#555',
     },
+    removeButton: {
+        padding: 10,
+    },
+
+    //footer
     footer: {
         padding: 20,
         backgroundColor: '#fff',

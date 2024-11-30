@@ -15,7 +15,7 @@ const TeacherProfile = ({ navigation, route }) => {
     const fetchCourses = async (courseTeaching) => {
         try {
             const coursePromises = courseTeaching.map(async (course) => {
-                const courseRef = ref(database, `Courses/${course.courseID-1}`); // Đường dẫn tới id của courses
+                const courseRef = ref(database, `Courses/${course.courseID}`); // Đường dẫn tới id của courses
                 const snapshot = await get(courseRef);
 
                 if (snapshot.exists()) {

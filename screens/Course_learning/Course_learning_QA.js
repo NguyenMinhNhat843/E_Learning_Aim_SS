@@ -5,57 +5,20 @@ import { faHeart, faComment, faFaceSmile } from '@fortawesome/free-regular-svg-i
 import { faHeart as solidHeart, faFire } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '../Login_Logout/UserContext';
 import { database } from '../../firebaseConfig'; // Đường dẫn đúng tới file firebaseConfig.js
-import { ref, get, onValue } from 'firebase/database';
-
+import { ref, get, onValue, push, set } from 'firebase/database';
 
 const Course_info_QA = ({ course }) => {
     const { user } = useUser();
-
     const [likeQuestionlected, setLikeCQuestionSelected] = useState(false);
+    const [newQuestion, setNewQuestion] = useState('');  // Lưu câu hỏi mới
+
+    // Xử lý like câu hỏi
     const handleQuestionCourse = () => {
         setLikeCQuestionSelected(!likeQuestionlected);
     };
 
-    const Question_item = ({ item }) => {
-
-        const [likeQuestionlected, setLikeCQuestionSelected] = useState(false);
-        const handleQuestionCourse = () => {
-            setLikeCQuestionSelected(!likeQuestionlected);
-        };
-    
-        return (
-            <View style={styles.item_container}>
-                {/* avatar */}
-                <View style={styles.user}>
-                    <View style={styles.avatar_wrap}>
-                        <Image style={styles.avatar} source={{ uri: user.image.url }} resizeMode="cover" />
-                    </View>
-                    <View style={styles.user_name}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user.name}</Text>
-                        <Text style={{ fontSize: 14, color: '#ccc' }}>{user.course_learning.time}</Text>
-                    </View>
-                </View>
-                {/* content */}
-                <Text style={styles.question}>{item.content}</Text>
-                {/* like and comment */}
-                <View style={styles.like_comment}>
-                    <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
-                        {likeQuestionlected ? (
-                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'red' }} icon={solidHeart} />
-                        ) : (
-                            <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
-                        )}
-                    </Pressable>
-                    <Text style={{ paddingRight: 24 }}>{item.likes}</Text>
-                    <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
-                    <Text style={{ paddingRight: 16 }}>{item.comments} comment</Text>
-                </View>
-            </View>
-        );
-    };
-
-    const [QA, setQA] = useState([]);
-
+    const [QA, setQA] = useState([]); // Dữ liệu câu hỏi
+    // Lấy dữ liệu câu hỏi từ Firebase khi component được render
     useEffect(() => {
         const fetchQA = async (userID, courseID) => {
             try {
@@ -95,43 +58,123 @@ const Course_info_QA = ({ course }) => {
         }
     }, [user, course]);
 
-    return (
-        <View style={styles.container}>
-            <FlatList 
-                data={QA} 
-                renderItem={({ item }) => <Question_item item={item} />} 
-                keyExtractor={(item) => item.id} 
-            />
+    // Hàm xử lý đăng câu hỏi lên Firebase
+    const handlePostQuestion = async () => {
+        if (newQuestion.trim() === '') {
+            alert("Vui lòng nhập câu hỏi!");
+            return;
+        }
 
-            {/* my comment */}  
-            <View style={styles.my_comment}>
-                <View style={styles.avatar_wrap}>
-                    <Image style={styles.avatar} source={{ uri: user.image.url }} />
+        try {
+            const timestamp = Date.now();
+            const timeString = new Date(timestamp).toLocaleString();
+            const newQuestionId = new Date().getTime().toString();
+
+            const newQuestionRef = push(ref(database, 'question_answer'));  // Lấy đường dẫn câu hỏi theo course
+            const newQuestionData = {
+                content: newQuestion,
+                courseID: course.id,
+                userID: user.id,
+                likes: 0,
+                comments: 0,
+                time: timeString,
+                id: newQuestionId,
+            };
+
+            // Thêm câu hỏi vào Firebase
+            await set(newQuestionRef, newQuestionData);
+
+            // Cập nhật state QA để câu hỏi mới xuất hiện ngay lập tức trên giao diện
+            setQA(prevQA => [newQuestionData, ...prevQA]);
+
+            // Reset ô nhập liệu sau khi đăng câu hỏi
+            setNewQuestion('');
+        } catch (error) {
+            console.error("Error posting question: ", error);
+        }
+    };
+
+    // Component hiển thị mỗi câu hỏi
+    const Question_item = ({ item }) => {
+
+        const [likeQuestionlected, setLikeCQuestionSelected] = useState(false);
+        const handleQuestionCourse = () => {
+            setLikeCQuestionSelected(!likeQuestionlected);
+        };
+
+        return (
+            <View style={styles.item_container}>
+                {/* avatar */}
+                <View style={styles.user}>
+                    <View style={styles.avatar_wrap}>
+                        <Image style={styles.avatar} source={{ uri: user.image.url }} resizeMode="cover" />
+                    </View>
+                    <View style={styles.user_name}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{user.name}</Text>
+                        <Text style={{ fontSize: 14, color: '#ccc' }}>{item.time}</Text>
+                    </View>
                 </View>
-                <View style={styles.comment_block}>
-                    <View style={styles.icon}>
-                        <FontAwesomeIcon style={{ color: 'red' }} icon={solidHeart} />
-                        <FontAwesomeIcon style={{ color: 'orange' }} icon={faFaceSmile} />
-                        <FontAwesomeIcon style={{ color: 'red' }} icon={faFire} />
-                    </View>
-                    <View style={styles.question_wrap}>
-                        <TextInput style={styles.question_input} placeholder="Write a Q&A..." />
-                    </View>
+                {/* content */}
+                <Text style={styles.question}>{item.content}</Text>
+                {/* like and comment */}
+                <View style={styles.like_comment}>
+                    <Pressable style={{ paddingLeft: 8 }} onPress={handleQuestionCourse}>
+                        {likeQuestionlected ? (
+                            <FontAwesomeIcon style={{ paddingRight: 8, color: 'red' }} icon={solidHeart} />
+                        ) : (
+                            <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faHeart} />
+                        )}
+                    </Pressable>
+                    <Text style={{ paddingRight: 24 }}>{item.likes}</Text>
+                    <FontAwesomeIcon style={{ paddingRight: 8 }} icon={faComment} />
+                    <Text style={{ paddingRight: 16 }}>{item.comments} comment</Text>
                 </View>
             </View>
+        );
+    };
+
+
+    return (
+        <View style={styles.container}>
+            {/* Ô nhập liệu và nút đăng câu hỏi */}
+            <View style={styles.input_container}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Nhập câu hỏi của bạn..."
+                    value={newQuestion}
+                    onChangeText={setNewQuestion}
+                />
+                <Pressable style={styles.button} onPress={handlePostQuestion}>
+                    <Text style={styles.buttonText}>Đăng câu hỏi</Text>
+                </Pressable>
+            </View>
+
+            {/* Hiển thị danh sách câu hỏi từ Firebase */}
+            <FlatList
+                data={QA}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <Question_item item={item} />}
+                style={styles.scrollView}
+            />
+
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {},
+    container: {
+        flex: 1,
+    },
+    scrollView: {
+        marginBottom: 50,
+    },
     item_container: {
         flexDirection: 'column',
         backgroundColor: '#fff',
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 8,
-        marginTop: 16,
+        marginTop: 8,
         padding: 8,
     },
     // user
@@ -160,39 +203,47 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
         textAlign: 'justify',
     },
-    // my comment
-    my_comment: {
+    input_container: {
+        marginTop: 12,
+        padding: 10,
+        backgroundColor: '#fff',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        backgroundColor: 'white',
-        paddingTop: 24,
-        marginTop: 16,
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
     },
-    comment_block: {
-        paddingLeft: 16,
-        justifyContent: 'space-between',
+    input: {
+        flex: 1,
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingLeft: 10,
+    },
+    button: {
+        backgroundColor: '#0066CC',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        marginLeft: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    user_info: {
         flex: 1,
     },
-    icon: {
+    time: {
+        fontSize: 12,
+        color: '#888',
+    },
+    question_content: {
+        marginTop: 10,
+        fontSize: 16,
+    },
+    actions: {
+        marginTop: 10,
         flexDirection: 'row',
-        gap: 8,
-    },
-    question_wrap: {
-        backgroundColor: '#f5f5f5',
-        borderRadius: 8,
-    },
-    question: {
-        width: '100%',
-        padding: 8,
-    },
-
-    question_input: {
-        width: '100%',
-        padding: 8,
-        backgroundColor: '#f5f5f5',
-        borderRadius: 8,
+        justifyContent: 'space-around',
     },
 });
 

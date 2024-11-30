@@ -35,7 +35,7 @@ const Course_learning_main = ({ navigation, route }) => {
     const fetchCourseDetails = async (courseID) => {
         try {
             // Truy vấn khóa học dựa trên courseID
-            const courseRef = ref(database, `Courses/${courseID - 1}`);
+            const courseRef = ref(database, `Courses/${courseID}`);
             const snapshot = await get(courseRef);
 
             if (snapshot.exists()) {
@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 8,
+        backgroundColor: '#f8f8f8',
     },
     header_right: {
         flexDirection: 'row',

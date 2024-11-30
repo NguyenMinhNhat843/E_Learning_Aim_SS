@@ -6,6 +6,12 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
 
+    // Hàm xóa item khỏi giỏ hàng
+    const removeItem = (itemId) => {
+        setCartItems(cartItems.filter(item => item.id !== itemId));
+    };
+
+    // Hàm thêm item vào giỏ hàng
     const addToCart = (course) => {
         // Kiểm tra khóa học đã tồn tại chưa
         const existingItem = cartItems.find((item) => item.id === course.id);
@@ -18,5 +24,9 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    return <CartContext.Provider value={{ cartItems, addToCart }}>{children}</CartContext.Provider>;
+    return (
+        <CartContext.Provider value={{ cartItems, setCartItems, removeItem, addToCart }}>
+            {children}
+        </CartContext.Provider>
+    );
 };

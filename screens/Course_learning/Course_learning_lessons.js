@@ -13,10 +13,12 @@ const Lesson_Tab = ({ course }) => {
 
     const renderLessonItem = ({ item }) => (
         <View style={styles.lessonItem}>
-            <Text style={styles.lessonTitle}>{item.title}</Text>
+        <View style={styles.lessonItemView}>
+            <Text style={styles.lessonTitle}>{item.lesson_name}</Text>
             <Text style={styles.lessonDuration}>{item.time}</Text>
-            {item.state ? <FontAwesome name="lock" size={20} color="gray" /> : <FontAwesome name="play-circle" size={20} color="#007BFF" />}
         </View>
+        {item.state ? <FontAwesome name="lock" size={20} color="gray" /> : <FontAwesome name="play-circle" size={20} color="#007BFF" />}
+    </View>
     );
 
     return (
@@ -46,21 +48,43 @@ const Lesson_Tab = ({ course }) => {
 };
 
 const styles = StyleSheet.create({
-    lessons_container: {
-        flexDirection: 'column',
-        padding: 16,
+    container: {
+        flex: 1,
+        padding: 10,
         backgroundColor: '#fff',
     },
-    lessons_detail: {
-        flexDirection: 'column',
+    lessonGroupHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
     },
-    lessons_detail_item: {
+    lessonGroupTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    lessonList: {
+        paddingVertical: 10,
+    },
+    lessonItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 24,
-        paddingBottom: 24,
-        fontSize: 18,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
+    },
+    lessonItemView:{
+        flexDirection: 'row',justifyContent:'space-between', width:'95%'
+    },
+    lessonTitle: {
+        fontSize: 16,
+        fontweight: 'bold',
+    },
+    lessonDuration: {
+        fontSize: 12,
+        color: 'gray',
     },
 });
 
