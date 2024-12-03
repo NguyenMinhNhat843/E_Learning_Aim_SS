@@ -10,7 +10,7 @@ import { database } from '../../firebaseConfig'; // Cập nhật đúng đườn
 
 
 const CartScreen = ({ route }) => {
-    const { user } = useUser(); // Lấy thông tin người dùng từ context
+    const { user, setUser } = useUser(); // Lấy thông tin người dùng từ context
 
     // lấy item giỏ hàng từ context
     const { cartItems, removeItem, setCartItems } = useContext(CartContext);
@@ -28,15 +28,15 @@ const CartScreen = ({ route }) => {
             Alert.alert('Lỗi', 'Giỏ hàng trống hoặc không tìm thấy người dùng!');
             return;
         }
-    
+
         try {
             // Lấy thông tin người dùng từ Firebase
             const userRef = ref(database, `Users/${user.id}`);
             const userSnapshot = await get(userRef);
-    
+
             if (userSnapshot.exists()) {
                 const userData = userSnapshot.val();
-    
+
                 // Cập nhật course_learning của người dùng với các khóa học trong giỏ hàng
                 const newCourses = cartItems.map(item => ({
                     courseID: String(parseInt(item.id) - 1),  // ID khóa học
@@ -45,18 +45,22 @@ const CartScreen = ({ route }) => {
                     progress: 0,  // Mới thanh toán, bắt đầu từ 0
                     time: item.time || '0 mins'  // Thời gian khóa học
                 }));
-    
+
                 // Cập nhật lại danh sách khóa học học của người dùng
                 const updatedCourses = [...userData.course_learning, ...newCourses];
-    
+
                 // Cập nhật dữ liệu người dùng vào Firebase
                 await update(userRef, {
                     course_learning: updatedCourses
                 });
-    
+
+                // Cập nhật dữ liệu user trong UserContext (state của ứng dụng)
+                const updatedUser = { ...userData, course_learning: updatedCourses };
+                setUser(updatedUser);  // Cập nhật dữ liệu người dùng trong UserContext
+
                 // Xóa các sản phẩm trong giỏ hàng
                 setCartItems([]);  // Xóa giỏ hàng
-    
+
                 // Thông báo thanh toán thành công
                 Alert.alert('Thanh toán thành công', 'Khóa học đã được thêm vào danh sách học của bạn!');
             } else {
@@ -89,8 +93,8 @@ const CartScreen = ({ route }) => {
                 <Text style={styles.name}>{item.name}</Text>
                 <Text style={styles.price}>${item.price}</Text>
             </View>
-            <TouchableOpacity 
-                style={styles.removeButton} 
+            <TouchableOpacity
+                style={styles.removeButton}
                 onPress={() => handleRemoveItem(item.id)} // Gọi hàm xóa
             >
                 <FontAwesomeIcon icon={faTrashAlt} size={20} color="red" />
